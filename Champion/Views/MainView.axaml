@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Champion.ViewModels"
+             x:Class="Champion.Views.MainView"
+             x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid VerticalAlignment="Top" Row="0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Grid Grid.Row="0" Grid.Column="0" Margin="10,10,10,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Фамилия:" VerticalContentAlignment="Center" Grid.Column="0"
+               Padding="0 0 10 0" />
+        <TextBox Name="SurnameTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
+                 Grid.Column="1" MinWidth="200" />
+      </Grid>
+      <Grid Grid.Row="0" Grid.Column="1" Margin="10,10,10,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Имя:" VerticalContentAlignment="Center" Grid.Column="0" Padding="0 0 10 0" />
+        <TextBox Name="NameTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
+                 Grid.Column="1" MinWidth="200" />
+      </Grid>
+      <Grid Grid.Row="0" Grid.Column="2" Margin="10,10,10,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Тренер:" VerticalContentAlignment="Center" Grid.Column="0"
+               Padding="0 0 10 0" />
+        <TextBox Name="CoachTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
+                 Grid.Column="1" MinWidth="200" />
+      </Grid>
+      <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,10,10">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Категория:" VerticalContentAlignment="Center" Grid.Column="0"
+               Padding="0 0 10 0" />
+        <ComboBox Name="CategoryComboBox" VerticalContentAlignment="Center"
+                  Grid.Column="1" MinWidth="300" />
+      </Grid>
+
+      <Button Name="AddCompetitor" Content="Добавить Участника"
+              Margin="10" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" />
+    </Grid>
+    <Grid Grid.Row="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      
+      <Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+             Content="Количество записей: 0" FontSize="10" />
+    </Grid>
+  </Grid>
+</UserControl>
