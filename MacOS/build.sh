@@ -1,6 +1,8 @@
 #!/bin/bash
+
 APP_NAME="./Champion.app"
-PUBLISH_OUTPUT_DIRECTORY="./osx-arm64/."
+RUNTIME="osx-arm64"
+PUBLISH_OUTPUT_DIRECTORY="../Champion.Desktop/bin/publish/$RUNTIME/"
 # PUBLISH_OUTPUT_DIRECTORY should point to the output directory of your dotnet publish command.
 # One example is /path/to/your/csproj/bin/Release/netcoreapp3.1/osx-x64/publish/.
 # If you want to change output directories, add `--output /my/directory/path` to your `dotnet publish` command.
@@ -11,6 +13,11 @@ if [ -d "$APP_NAME" ]
 then
     rm -rf "$APP_NAME"
 fi
+
+cd ../Champion.Desktop
+dotnet restore
+dotnet publish -r $RUNTIME --self-contained --configuration Release -p:UseAppHost=true --output ./bin/publish/$RUNTIME
+cd ../MacOS
 
 mkdir "$APP_NAME"
 
