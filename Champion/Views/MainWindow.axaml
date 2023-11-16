@@ -21,7 +21,7 @@
                        MaterialOpacity="0.65" />
                </ExperimentalAcrylicBorder.Material>
            </ExperimentalAcrylicBorder>
-            <TabControl>
+            <TabControl Padding="0">
                 <TabItem Header="Редактор участников">
                     <views:MainView />
                 </TabItem>
