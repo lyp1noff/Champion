@@ -65,7 +65,7 @@ public class Utils
 
     public static void CreateDocxBracket(string categoryName, List<Competitor> competitors, string folder, string fileName)
     {
-        using var document = DocX.Load($"{folder}\\{competitors.Count}.docx");
+        using var document = DocX.Load(Path.Combine(folder, $"{competitors.Count}.docx"));
         document.ReplaceText("{{ name_0 }}", categoryName);
 
         var idx = 1;
@@ -80,7 +80,7 @@ public class Utils
 
     public static void CreateDocxRoundBracket(string categoryName, List<Competitor> competitors, string folder, string fileName)
     {
-        using var document = DocX.Load($"{folder}\\round.docx");
+        using var document = DocX.Load(Path.Combine(folder, "round.docx"));
         document.ReplaceText("{{ name_0 }}", categoryName);
 
         var idx = 1;

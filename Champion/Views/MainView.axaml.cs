@@ -26,7 +26,14 @@ public partial class MainView : UserControl
         string currentDirectory = Environment.CurrentDirectory;
         Console.WriteLine("Current Directory: " + currentDirectory);
 
-        var appFolderRaw = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string appFolderRaw;
+        #if WINDOWS
+            appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+        #elif MACOS
+            appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Documents");
+        #else
+            appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+        #endif
         var appFolder = Path.Combine(appFolderRaw, "Champion");
         _appFolder = appFolder;
         Directory.CreateDirectory(appFolder);
