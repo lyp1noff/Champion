@@ -38,7 +38,7 @@
       </Grid>
 
       <Button Name="AddCompetitor" Content="Добавить Участника"
-              Margin="10" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" />
+              Margin="10" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Click="OnButtonClick"/>
     </Grid>
     <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
       <Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
