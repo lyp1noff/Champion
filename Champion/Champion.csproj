@@ -3,6 +3,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+
+	<DefineConstants Condition="'$(OS)' == 'Windows'">WINDOWS</DefineConstants>
+	<DefineConstants Condition="'$(OS)' == 'Unix'">MACOS</DefineConstants> 
   </PropertyGroup>
 
   
@@ -28,5 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 </Project>

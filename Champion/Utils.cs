@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using Xceed.Words.NET;
 
-namespace ChampionBracketMaker;
+namespace Champion;
 
 public class Utils
 {

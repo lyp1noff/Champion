@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace ChampionBracketMaker;
+namespace Champion;
 
 [Serializable]
 public class CompetitorManager

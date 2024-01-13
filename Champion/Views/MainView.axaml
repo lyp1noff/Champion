@@ -6,8 +6,6 @@
              x:Class="Champion.Views.MainView"
              x:DataType="vm:MainViewModel">
   <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
 
@@ -38,10 +36,25 @@
       </Grid>
 
       <Button Name="AddCompetitor" Content="Добавить Участника"
-              Margin="10" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Click="OnButtonClick"/>
+              Margin="10" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Command="{Binding AddCompetitor}"/>
     </Grid>
     <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
-      <Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+		<DataGrid Name="CompetitorsDataGrid" ItemsSource="{Binding competitors}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="None">
+			<DataGrid.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="Изменить" />
+					<MenuItem Header="Удалить" />
+				</ContextMenu>
+			</DataGrid.ContextMenu>
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" MinWidth="150" />
+				<DataGridTextColumn Header="Имя" Binding="{Binding Name}" MinWidth="150" />
+				<DataGridTextColumn Header="Тренер" Binding="{Binding Coach}" MinWidth="150" />
+				<DataGridTextColumn Header="Категория" Binding="{Binding Category}" MinWidth="250" />
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
              Content="Количество записей: 0" FontSize="10" />
     </Grid>
   </Grid>
