@@ -9,10 +9,9 @@ PUBLISH_OUTPUT_DIRECTORY="./$RUNTIME/"
 INFO_PLIST="./Info.plist"
 ICON_FILE="./Icon.icns"
 
-curl "https://noboobs.help/projects/Champion/macos/$RUNTIME.zip" --output "$RUNTIME.zip"
-curl https://noboobs.help/projects/Champion/macos/assets.zip --output assets.zip
-unzip assets.zip
-rm assets.zip
+curl "https://noboobs.life/projects/Champion/macos/$RUNTIME.zip" --output "$RUNTIME.zip"
+curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/Icon.icns --output Icon.icns
+curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/MacOS/Info.plist --output Info.plist
 unzip "$RUNTIME".zip
 rm "$RUNTIME".zip
 
