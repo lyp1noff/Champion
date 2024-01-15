@@ -11,19 +11,33 @@ public class ExportViewModel : ViewModelBase
     {
         ExportToDocx = ReactiveCommand.Create(() =>
         {
-            App.СompetitorManager.AddCompetitor(new Competitor("Andrew", "Paziuka", "Zalan", "CADET OPEN"));
-            App.СompetitorManager.AddCompetitor(new Competitor("Ivan", "Paziuka", "Zalan", "CADET OPEN"));
+            var categories = App.CompetitorManager.GetCategories();
 
-            var currentExportFolder =
-                Path.Combine(AppConfig.ExportFolder, DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"));
-            Directory.CreateDirectory(currentExportFolder);
-            foreach (var category in App.СompetitorManager.GetCategories())
+            if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder, App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerGroup)) { return; }
+
+            var dateTime = DateTime.Now;
+            var exportFolder = Path.Combine(App.AppConfig.ExportFolder, dateTime.ToString("dd-MM-yyyy-HH-mm-ss"));
+            Directory.CreateDirectory(exportFolder);
+
+            foreach (var categoryName in categories)
             {
-                var filename = Utils.GetFileName(category);
-                var filepath = Path.Combine(currentExportFolder, filename);
+                var numberOfCompetitors = App.CompetitorManager.GetBracket(categoryName).Count;
+                var categorySizes = Utils.SplitCompetitors(numberOfCompetitors, App.AppConfig.MaxCompetitorsPerGroup);
 
-                Utils.CreateDocxBracket(category, App.СompetitorManager.GetBracket("CADET OPEN"), AppConfig.TemplatesFolder,
-                    filepath);
+                var idx = 1;
+                var pointer = 0;
+                foreach (var categorySize in categorySizes)
+                {
+                    var category = App.CompetitorManager.GetBracket(categoryName);
+                    var filename = Utils.GetFileName(categoryName);
+                    var filepath = Path.Combine(exportFolder, filename);
+                    var bracket = category.GetRange(pointer, categorySize);
+                    pointer += categorySize;
+                    if (categorySizes.Count > 1)
+                        filepath += $"_{idx}";
+                    Utils.CreateDocxBracket(categoryName, bracket, App.AppConfig.TemplatesFolder, $"{filepath}");
+                    idx++;
+                }
             }
         });
     }

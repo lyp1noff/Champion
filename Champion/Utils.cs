@@ -190,7 +190,7 @@ public class Utils
     {
         using (var response = await httpClient.GetAsync(url))
         {
-            response.EnsureSuccessStatusCode(); // Ensure successful response
+            response.EnsureSuccessStatusCode();
 
             using (var contentStream = await response.Content.ReadAsStreamAsync())
             using (var fileStream = new FileStream(filePath, FileMode.Create))

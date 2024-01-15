@@ -1,10 +1,15 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.IO;
+using System.Windows.Input;
 using ReactiveUI;
 
 namespace Champion.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
+    private CompetitorManager competitorManager;
+    private ObservableCollection<string> options;
+
     private string _surnameTextBox = null!;
     private string _nameTextBox = null!;
     private string _coachTextBox = null!;
@@ -12,14 +17,24 @@ public class MainViewModel : ViewModelBase
     
     public MainViewModel()
     {
+        competitorManager = App.CompetitorManager;
+
+        Options = new ObservableCollection<string>(File.ReadAllLines(App.AppConfig.CategoriesFile));
+
         AddCompetitor = ReactiveCommand.Create(() =>
         {
             if (_nameTextBox == null || _surnameTextBox == null || _coachTextBox == null || _categoryComboBoxSelection == null) { return; }
-            App.СompetitorManager.AddCompetitor(new Competitor(_nameTextBox, _surnameTextBox, _coachTextBox, _categoryComboBoxSelection));
+            App.CompetitorManager.AddCompetitor(new Competitor(_nameTextBox, _surnameTextBox, _coachTextBox, _categoryComboBoxSelection));
         });
     }
 
     public ICommand AddCompetitor { get; }
+    public ObservableCollection<Competitor> Competitors => competitorManager.Competitors;
+    public ObservableCollection<string> Options
+    {
+        get => options;
+        set => this.RaiseAndSetIfChanged(ref options, value);
+    }
     public string SurnameTextBox
     {
         get => _surnameTextBox;

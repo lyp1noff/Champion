@@ -5,18 +5,28 @@ using Champion.ViewModels;
 using Champion.Views;
 using System.IO;
 using System.Linq;
+using Avalonia.Platform;
+using System;
 
 namespace Champion;
 
 public class App : Application
 {
-    public static CompetitorManager СompetitorManager = new();
+    public static AppConfig AppConfig = new();
+    public static CompetitorManager CompetitorManager = new();
 
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
 
         AppConfig.Initialize();
+        AppConfig.MaxCompetitorsPerGroup = 6;
+        AppConfig.MaxCompetitorsPerRoundGroup = 4;
+
+        CompetitorManager.AddCompetitor(new Competitor("Andrew", "Paziuka", "Zalan", "CADET OPEN"));
+        CompetitorManager.AddCompetitor(new Competitor("Ivan", "Paziuka", "Zalan", "CADET OPEN"));
+        CompetitorManager.AddCompetitor(new Competitor("Ярик", "Кипелов", "Боев", "KUMITE 12 YEARS OPEN"));
+        CompetitorManager.AddCompetitor(new Competitor("Вася", "Морозов", "Боев", "KUMITE 12 YEARS OPEN"));
 
         Directory.CreateDirectory(AppConfig.AppFolder);
         Directory.CreateDirectory(AppConfig.TemplatesFolder);
@@ -29,10 +39,10 @@ public class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel()
-            };
+
+            desktop.MainWindow = OperatingSystem.IsMacOS() ?
+                new MainWindow { DataContext = new MainWindowViewModel() } :
+                new MainWindowWin { DataContext = new MainWindowViewModel() };
 
         base.OnFrameworkInitializationCompleted();
     }

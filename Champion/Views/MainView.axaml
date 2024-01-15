@@ -29,7 +29,8 @@
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,10,10" ColumnDefinitions="Auto, *">
                 <Label Content="Категория:" VerticalContentAlignment="Center" Grid.Column="0"
                        Padding="0 0 10 0" />
-                <AutoCompleteBox  Name="CategoryComboBox" Grid.Column="1" MinWidth="300" Text="{Binding CategoryComboBoxSelection}"/>
+                <AutoCompleteBox Name="CategoryComboBox" Grid.Column="1" MinWidth="300" FilterMode="Contains"
+                                 ItemsSource="{Binding Options}" Text="{Binding CategoryComboBoxSelection}"/>
             </Grid>
 
             <Button Name="AddCompetitor" Content="Добавить Участника" HorizontalContentAlignment="Center"
@@ -37,12 +38,23 @@
                     Command="{Binding AddCompetitor}" />
         </Grid>
         <Grid Grid.Row="1" RowDefinitions="*, Auto">
-			<DataGrid Margin="10" ItemsSource="{Binding App.СompetitorManager.Competitors}"
-                      AutoGenerateColumns="True" IsReadOnly="True"
+			<DataGrid Margin="10" ItemsSource="{Binding Competitors}"
+                      IsReadOnly="False"
                       GridLinesVisibility="All" 
                       CanUserResizeColumns="True"
-                      CanUserSortColumns="True"
-                      BorderThickness="1" BorderBrush="Gray">
+                      CanUserSortColumns="True">
+				<DataGrid.Columns>
+                    <DataGridTextColumn Header="Фамилия" Width="2*" Binding="{Binding Surname}" />
+                    <DataGridTextColumn Header="Имя" Width="2*" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Тренер" Width="2*" Binding="{Binding Coach}" />
+                    <DataGridTextColumn Header="Категория" Width="2*" Binding="{Binding Category}" />
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit"/>
+                        <MenuItem Header="Remove"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
             <Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                    Content="Количество записей: 0" FontSize="10" />
