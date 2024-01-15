@@ -1,12 +1,11 @@
 using Avalonia.Controls;
 
-namespace Champion.Views
+namespace Champion.Views;
+
+public partial class ExportView : UserControl
 {
-    public partial class ExportView : UserControl
+    public ExportView()
     {
-        public ExportView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

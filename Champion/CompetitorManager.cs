@@ -24,7 +24,7 @@ public class CompetitorManager
 
     public bool CompetitorExists(Competitor competitor)
     {
-        bool objectExists = Competitors.Any(obj =>
+        var objectExists = Competitors.Any(obj =>
             obj.Category == competitor.Category &&
             obj.Coach == competitor.Coach &&
             obj.Name == competitor.Name &&
@@ -36,12 +36,8 @@ public class CompetitorManager
     {
         List<string> coaches = new();
         foreach (var cmp in Competitors)
-        {
             if (!coaches.Contains(cmp.Coach))
-            {
                 coaches.Add(cmp.Coach);
-            }
-        }
         return coaches;
     }
 
@@ -50,25 +46,23 @@ public class CompetitorManager
         ObservableCollection<Competitor> competitorsByCoach = new();
         for (var i = 0; i < Competitors.Count; i++)
         {
-            Competitor cmp = Competitors[i];
-            if (cmp.Coach == coach)
-            {
-                competitorsByCoach.Add(cmp);
-            }
+            var cmp = Competitors[i];
+            if (cmp.Coach == coach) competitorsByCoach.Add(cmp);
         }
+
         return competitorsByCoach;
     }
 
     public List<int> CountCompetitorsInMultipleCategory()
     {
         ObservableCollection<Competitor> countedCompetitors = new();
-        List<int> quantities = new List<int>();
+        var quantities = new List<int>();
 
         for (var i = 0; i < Competitors.Count; i++)
         {
-            Competitor cmp = Competitors[i];
+            var cmp = Competitors[i];
 
-            bool objectExists = countedCompetitors.Any(obj =>
+            var objectExists = countedCompetitors.Any(obj =>
                 obj.Coach == cmp.Coach &&
                 obj.Name == cmp.Name &&
                 obj.Surname == cmp.Surname);
@@ -76,7 +70,7 @@ public class CompetitorManager
 
             countedCompetitors.Add(cmp);
 
-            int objectExistions = Competitors.Count(obj =>
+            var objectExistions = Competitors.Count(obj =>
                 obj.Coach == cmp.Coach &&
                 obj.Name == cmp.Name &&
                 obj.Surname == cmp.Surname);
@@ -84,16 +78,13 @@ public class CompetitorManager
             if (quantities.Count < objectExistions)
             {
                 quantities.Capacity = objectExistions;
-                while (quantities.Count < objectExistions)
-                {
-                    quantities.Add(0);
-                }
+                while (quantities.Count < objectExistions) quantities.Add(0);
             }
 
             quantities[objectExistions - 1] += 1;
         }
 
-        int competitorsQuantity = quantities.Sum(x => Convert.ToInt32(x));
+        var competitorsQuantity = quantities.Sum(x => Convert.ToInt32(x));
         quantities.Add(competitorsQuantity);
 
         return quantities;
@@ -134,11 +125,10 @@ public class CompetitorManager
 
     public void EnsureValidSortIds(List<Competitor> bracket)
     {
-        HashSet<int> usedSortIds = new HashSet<int>();
+        var usedSortIds = new HashSet<int>();
 
-        int idx = 1;
+        var idx = 1;
         foreach (var competitor in bracket)
-        {
             if (competitor.SortId > 0 && !usedSortIds.Contains(competitor.SortId))
             {
                 competitor.SortId = idx;
@@ -149,13 +139,11 @@ public class CompetitorManager
             {
                 competitor.SortId = -1;
             }
-        }
 
-        foreach (Competitor competitor in bracket)
-        {
+        foreach (var competitor in bracket)
             if (competitor.SortId <= 0)
             {
-                int newSortId = usedSortIds.Count > 0 ? usedSortIds.Max() + 1 : 1;
+                var newSortId = usedSortIds.Count > 0 ? usedSortIds.Max() + 1 : 1;
 
                 if (!usedSortIds.Contains(competitor.SortId))
                 {
@@ -163,18 +151,13 @@ public class CompetitorManager
                     usedSortIds.Add(newSortId);
                 }
             }
-        }
     }
 
 
     public void EnsureAllValidSortIds()
     {
-        foreach (var category in GetCategories())
-        {
-            EnsureValidSortIds(GetBracket(category));
-        }
+        foreach (var category in GetCategories()) EnsureValidSortIds(GetBracket(category));
     }
-
 }
 
 [Serializable]
@@ -183,10 +166,12 @@ public class Competitor
     private string _category = null!;
     private string _coach = null!;
     private string _name = null!;
-    private string _surname = null!;
     private int _sortId = -1;
+    private string _surname = null!;
 
-    public Competitor() { }
+    public Competitor()
+    {
+    }
 
     public Competitor(string name, string surname, string coach, string category)
     {

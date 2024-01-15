@@ -63,7 +63,8 @@ public class Utils
         return reader.ReadToEnd();
     }
 
-    public static void CreateDocxBracket(string categoryName, List<Competitor> competitors, string folder, string fileName)
+    public static void CreateDocxBracket(string categoryName, List<Competitor> competitors, string folder,
+        string fileName)
     {
         using var document = DocX.Load(Path.Combine(folder, $"{competitors.Count}.docx"));
         document.ReplaceText("{{ name_0 }}", categoryName);
@@ -78,7 +79,8 @@ public class Utils
         document.SaveAs($"{fileName}");
     }
 
-    public static void CreateDocxRoundBracket(string categoryName, List<Competitor> competitors, string folder, string fileName)
+    public static void CreateDocxRoundBracket(string categoryName, List<Competitor> competitors, string folder,
+        string fileName)
     {
         using var document = DocX.Load(Path.Combine(folder, "round.docx"));
         document.ReplaceText("{{ name_0 }}", categoryName);
@@ -90,10 +92,7 @@ public class Utils
             idx++;
         }
 
-        for (; idx <= 5; idx++)
-        {
-            document.ReplaceText($"{{{{ name_{idx} }}}}", "");
-        }
+        for (; idx <= 5; idx++) document.ReplaceText($"{{{{ name_{idx} }}}}", "");
 
 
         document.SaveAs($"{fileName}");
@@ -158,51 +157,46 @@ public class Utils
     //    }
     //}
 
-    public static Boolean ExportValidationCheck(CompetitorManager competitorManager, string templatesFolder, string exportFolder, int maxCompetitorsPerGroup)
+    public static bool ExportValidationCheck(CompetitorManager competitorManager, string templatesFolder,
+        string exportFolder, int maxCompetitorsPerGroup)
     {
         if (string.IsNullOrEmpty(templatesFolder) || string.IsNullOrEmpty(exportFolder))
-        {
             //MessageBox.Show("Не указаны папки", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             return true;
-        }
 
         if (competitorManager.Competitors.GroupBy(c => c.Category).Any(group => group.Count() < 2))
-        {
             //MessageBox.Show("Категория содержит менее 2 участников", "Ошибка", MessageBoxButton.OK,
             //    MessageBoxImage.Error);
             return true;
-        }
 
         var competitorSizes = competitorManager.GetCategories().Select(category =>
         {
             var numberOfCompetitors = competitorManager.GetBracket(category).Count();
-            return Utils.SplitCompetitors(numberOfCompetitors, maxCompetitorsPerGroup);
+            return SplitCompetitors(numberOfCompetitors, maxCompetitorsPerGroup);
         }).SelectMany(list => list).ToList();
 
         foreach (var size in competitorSizes)
             if (!File.Exists(Path.Combine(templatesFolder, $"{size}.docx")))
-            {
                 //MessageBox.Show($"Отсутствует шаблон для категории размером {size}", "Ошибка", MessageBoxButton.OK,
                 //    MessageBoxImage.Error);
                 return true;
-            }
 
         return false;
     }
 
     public static void DownloadDefaultBrackets(string appFolder, string templatesFolder)
     {
-        string bracketsZipUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/templates.zip";
-        string bracketsZipName = Path.GetFileName(bracketsZipUrl);
-        string bracketsZip = Path.Combine(appFolder, bracketsZipName);
+        var bracketsZipUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/templates.zip";
+        var bracketsZipName = Path.GetFileName(bracketsZipUrl);
+        var bracketsZip = Path.Combine(appFolder, bracketsZipName);
 
-        string categoriesUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/categories.txt";
-        string categoriesName = Path.GetFileName(categoriesUrl);
-        string categories = Path.Combine(appFolder, categoriesName);
+        var categoriesUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/categories.txt";
+        var categoriesName = Path.GetFileName(categoriesUrl);
+        var categories = Path.Combine(appFolder, categoriesName);
 
         try
         {
-            using (WebClient client = new WebClient())
+            using (var client = new WebClient())
             {
                 client.DownloadFile(categoriesUrl, categories);
                 client.DownloadFile(bracketsZipUrl, bracketsZip);
@@ -219,12 +213,9 @@ public class Utils
         {
             ZipFile.ExtractToDirectory(bracketsZip, templatesFolder);
         }
-        else
-        {
-            //MessageBox.Show($"Удалите существующие сетки", "Ошибка", MessageBoxButton.OK,
-            //    MessageBoxImage.Error);
-        }
 
+        //MessageBox.Show($"Удалите существующие сетки", "Ошибка", MessageBoxButton.OK,
+        //    MessageBoxImage.Error);
         File.Delete(bracketsZip);
     }
 

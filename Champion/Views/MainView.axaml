@@ -1,61 +1,46 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Champion.ViewModels"
              x:Class="Champion.Views.MainView"
              x:DataType="vm:MainViewModel">
-  <Design.DataContext>
-    <vm:MainViewModel />
-  </Design.DataContext>
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
 
-  <Grid RowDefinitions="Auto, *">
-    <Grid VerticalAlignment="Top" Row="0" ColumnDefinitions="*, *, *" RowDefinitions="*, *">
-      <Grid Grid.Row="0" Grid.Column="0" Margin="10,10,10,0" ColumnDefinitions="Auto, *">
-        <Label Content="Фамилия:" VerticalContentAlignment="Center" Grid.Column="0"
-               Padding="0 0 10 0" />
-        <TextBox Name="SurnameTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
-                 Grid.Column="1" MinWidth="200" />
-      </Grid>
-      <Grid Grid.Row="0" Grid.Column="1" Margin="10,10,10,0" ColumnDefinitions="Auto, *">
-        <Label Content="Имя:" VerticalContentAlignment="Center" Grid.Column="0" Padding="0 0 10 0" />
-        <TextBox Name="NameTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
-                 Grid.Column="1" MinWidth="200" />
-      </Grid>
-      <Grid Grid.Row="0" Grid.Column="2" Margin="10,10,10,0" ColumnDefinitions="Auto, *">
-        <Label Content="Тренер:" VerticalContentAlignment="Center" Grid.Column="0"
-               Padding="0 0 10 0" />
-        <TextBox Name="CoachTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
-                 Grid.Column="1" MinWidth="200" />
-      </Grid>
-      <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,10,10" ColumnDefinitions="Auto, *">
-        <Label Content="Категория:" VerticalContentAlignment="Center" Grid.Column="0"
-               Padding="0 0 10 0" />
-        <ComboBox Name="CategoryComboBox" VerticalContentAlignment="Center"
-                  Grid.Column="1" MinWidth="300" />
-      </Grid>
+    <Grid RowDefinitions="Auto, *">
+        <Grid VerticalAlignment="Top" Row="0" ColumnDefinitions="*, *, *" RowDefinitions="*, *">
+            <Grid Grid.Row="0" Grid.Column="0" Margin="10,10,10,0" ColumnDefinitions="Auto, *">
+                <Label Content="Фамилия:" VerticalContentAlignment="Center" Grid.Column="0"
+                       Padding="0 0 10 0" />
+                <TextBox Name="SurnameTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
+                         Grid.Column="1" MinWidth="200" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1" Margin="10,10,10,0" ColumnDefinitions="Auto, *">
+                <Label Content="Имя:" VerticalContentAlignment="Center" Grid.Column="0" Padding="0 0 10 0" />
+                <TextBox Name="NameTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
+                         Grid.Column="1" MinWidth="200" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="2" Margin="10,10,10,0" ColumnDefinitions="Auto, *">
+                <Label Content="Тренер:" VerticalContentAlignment="Center" Grid.Column="0"
+                       Padding="0 0 10 0" />
+                <TextBox Name="CoachTextBox" VerticalContentAlignment="Center" TextWrapping="Wrap"
+                         Grid.Column="1" MinWidth="200" />
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,10,10" ColumnDefinitions="Auto, *">
+                <Label Content="Категория:" VerticalContentAlignment="Center" Grid.Column="0"
+                       Padding="0 0 10 0" />
+                <ComboBox Name="CategoryComboBox" VerticalContentAlignment="Center"
+                          Grid.Column="1" MinWidth="300" />
+            </Grid>
 
-      <Button Name="AddCompetitor" Content="Добавить Участника"
-              Margin="10" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Command="{Binding AddCompetitor}"/>
+            <Button Name="AddCompetitor" Content="Добавить Участника"
+                    Margin="10" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"
+                    Command="{Binding AddCompetitor}" />
+        </Grid>
+        <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
+
+            <Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Content="Количество записей: 0" FontSize="10" />
+        </Grid>
     </Grid>
-    <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
-		<DataGrid Name="CompetitorsDataGrid" ItemsSource="{Binding competitors}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="None">
-			<DataGrid.ContextMenu>
-				<ContextMenu>
-					<MenuItem Header="Изменить" />
-					<MenuItem Header="Удалить" />
-				</ContextMenu>
-			</DataGrid.ContextMenu>
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" MinWidth="150" />
-				<DataGridTextColumn Header="Имя" Binding="{Binding Name}" MinWidth="150" />
-				<DataGridTextColumn Header="Тренер" Binding="{Binding Coach}" MinWidth="150" />
-				<DataGridTextColumn Header="Категория" Binding="{Binding Category}" MinWidth="250" />
-			</DataGrid.Columns>
-		</DataGrid>
-
-		<Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-             Content="Количество записей: 0" FontSize="10" />
-    </Grid>
-  </Grid>
 </UserControl>

@@ -1,9 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Champion.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Champion.Views"
+        xmlns:viewModels="clr-namespace:Champion.ViewModels"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
         Height="600" Width="900" MinWidth="900" MinHeight="600" WindowStartupLocation="CenterScreen"
         x:Class="Champion.Views.MainWindow"
@@ -11,26 +11,41 @@
         Title="Champion"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent">
-        <Panel>
-           <ExperimentalAcrylicBorder IsHitTestVisible="False">
-               <ExperimentalAcrylicBorder.Material>
-                   <ExperimentalAcrylicMaterial
-                       BackgroundSource="Digger"
-                       TintColor="Black"
-                       TintOpacity="1"
-                       MaterialOpacity="0.65" />
-               </ExperimentalAcrylicBorder.Material>
-           </ExperimentalAcrylicBorder>
-            <TabControl Padding="0">
-                <TabItem Header="Редактор участников">
-                    <views:MainView />
-                </TabItem>
-                <TabItem Header="Редактор сеток">
-                    <views:BracketEditorView />
-                </TabItem>
-                <TabItem Header="Экспорт">
-                    <views:ExportView />
-                </TabItem>
-            </TabControl>
-       </Panel>
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </Design.DataContext>
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="File">
+                <NativeMenuItem.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Open" Gesture="cmd+o" Command="{Binding OpenCommand}" />
+                        <NativeMenuItemSeparator />
+                    </NativeMenu>
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <TabControl Padding="0">
+            <TabItem Header="Редактор участников">
+                <views:MainView />
+            </TabItem>
+            <TabItem Header="Редактор сеток">
+                <views:BracketEditorView />
+            </TabItem>
+            <TabItem Header="Экспорт">
+                <views:ExportView />
+            </TabItem>
+        </TabControl>
+    </Panel>
 </Window>
