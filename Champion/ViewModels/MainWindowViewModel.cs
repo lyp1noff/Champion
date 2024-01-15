@@ -7,10 +7,12 @@ namespace Champion.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    public ReactiveCommand<Unit, string> OpenCommand { get; }
-
-    public MainWindowViewModel(Func<Task<String>> openCommand) {
-        OpenCommand = ReactiveCommand
-            .CreateFromTask(openCommand, outputScheduler: RxApp.MainThreadScheduler);
+    public MainWindowViewModel()
+    {
+        MainView = new MainViewModel();
+        ExportView = new ExportViewModel();
     }
+
+    public MainViewModel MainView { get; }
+    public ExportViewModel ExportView { get; }
 }

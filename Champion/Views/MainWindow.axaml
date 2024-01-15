@@ -38,13 +38,13 @@
         </ExperimentalAcrylicBorder>
         <TabControl Padding="0">
             <TabItem Header="Редактор участников">
-                <views:MainView />
+                <views:MainView DataContext="{Binding MainView}"/>
             </TabItem>
             <TabItem Header="Редактор сеток">
                 <views:BracketEditorView />
             </TabItem>
             <TabItem Header="Экспорт">
-                <views:ExportView />
+                <views:ExportView DataContext="{Binding ExportView}"/>
             </TabItem>
         </TabControl>
     </Panel>

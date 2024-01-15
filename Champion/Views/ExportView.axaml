@@ -2,8 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Champion.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Champion.Views.ExportView">
+    <Design.DataContext>
+        <viewModels:ExportViewModel />
+    </Design.DataContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -37,7 +42,7 @@
 
                 <Button Grid.Row="0" Grid.Column="0" Content="Открыть папку с шаблонами" Margin="10" />
                 <Button Grid.Row="0" Grid.Column="1" Content="Открыть папку экспорта" Margin="10" />
-                <Button Grid.Row="0" Grid.Column="2" Content="Экспорт" Margin="10" />
+                <Button Grid.Row="0" Grid.Column="2" Content="Экспорт" Margin="10" Command="{Binding ExportToDocx}" />
                 <Button Grid.Row="0" Grid.Column="3" Content="Круговой экспорт" Margin="10" />
                 <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Экспорт участников по категориям"
                         Margin="10" />

@@ -4,8 +4,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Xceed.Words.NET;
 
 namespace Champion;
@@ -184,7 +186,21 @@ public class Utils
         return false;
     }
 
-    public static void DownloadDefaultBrackets(string appFolder, string templatesFolder)
+    private static async Task DownloadFileAsync(HttpClient httpClient, string url, string filePath)
+    {
+        using (var response = await httpClient.GetAsync(url))
+        {
+            response.EnsureSuccessStatusCode(); // Ensure successful response
+
+            using (var contentStream = await response.Content.ReadAsStreamAsync())
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await contentStream.CopyToAsync(fileStream);
+            }
+        }
+    }
+
+    public static async void DownloadDefaultBrackets(string appFolder, string templatesFolder)
     {
         var bracketsZipUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/templates.zip";
         var bracketsZipName = Path.GetFileName(bracketsZipUrl);
@@ -196,10 +212,10 @@ public class Utils
 
         try
         {
-            using (var client = new WebClient())
+            using (var httpClient = new HttpClient())
             {
-                client.DownloadFile(categoriesUrl, categories);
-                client.DownloadFile(bracketsZipUrl, bracketsZip);
+                await DownloadFileAsync(httpClient, categoriesUrl, categories);
+                await DownloadFileAsync(httpClient, bracketsZipUrl, bracketsZip);
             }
         }
         catch (Exception ex)
