@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Champion.Views;
 using Xceed.Words.NET;
 
 namespace Champion;
@@ -240,35 +241,28 @@ public class Utils
     //            MaxCompetitorsPerRoundGroup = 4
     //        };
 
-    //        SaveConfigToJson(defaultConfig, configFilePath);
+    //        Save(defaultConfig, configFilePath);
     //    }
     //}
 
-    //public static AppConfig LoadConfig(string configFilePath)
-    //{
-    //    try
-    //    {
-    //        string json = File.ReadAllText(configFilePath);
-    //        AppConfig config = JsonSerializer.Deserialize<AppConfig>(json);
-    //        return config;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine($"Error loading config file: {ex.Message}");
-    //        return null;
-    //    }
-    //}
+    [Obsolete("Obsolete")]
+    public static void SerializeCompetitors(string filePath)
+    {
+        var formatter = new BinaryFormatter();
+        using var fileStream = new FileStream($"{filePath}", FileMode.Create);
+        formatter.Serialize(fileStream, App.CompetitorManager);
+    }
 
-    //public static void SaveConfigToJson(AppConfig config, string filePath)
-    //{
-    //    try
-    //    {
-    //        string json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
-    //        File.WriteAllText(filePath, json);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine($"Error saving config to JSON: {ex.Message}");
-    //    }
-    //}
+    [Obsolete("Obsolete")]
+    public static void DeserializeCompetitors(string filePath)
+    {
+        using (var stream = new FileStream(filePath, FileMode.Open))
+        {
+            var formatter = new BinaryFormatter();
+            App.CompetitorManager = (CompetitorManager)formatter.Deserialize(stream);
+            App.CompetitorManager.EnsureAllValidSortIds();
+        }
+
+        App.AppConfig.SaveFilePath = filePath;
+    }
 }

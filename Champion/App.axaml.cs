@@ -20,8 +20,6 @@ public class App : Application
         AvaloniaXamlLoader.Load(this);
 
         AppConfig.Initialize();
-        AppConfig.MaxCompetitorsPerGroup = 6;
-        AppConfig.MaxCompetitorsPerRoundGroup = 4;
 
         CompetitorManager.AddCompetitor(new Competitor("Andrew", "Paziuka", "Zalan", "CADET OPEN"));
         CompetitorManager.AddCompetitor(new Competitor("Ivan", "Paziuka", "Zalan", "CADET OPEN"));
@@ -34,15 +32,30 @@ public class App : Application
 
         if (!Directory.EnumerateFileSystemEntries(AppConfig.TemplatesFolder).Any())
             Task.Run(() => Utils.DownloadDefaultBrackets(AppConfig.AppFolder, AppConfig.TemplatesFolder)).Wait();
+
+        if (Path.Exists(AppConfig.ConfigFilePath))
+        {
+            var loadedConfig = AppConfig.Load();
+            typeof(AppConfig)
+                .GetProperties()
+                .Where(prop => prop.GetValue(loadedConfig) != null)
+                .ToList()
+                .ForEach(prop => prop.SetValue(AppConfig, prop.GetValue(loadedConfig)));
+        }
+        else
+        {
+            AppConfig.Save();
+        }
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 
-            desktop.MainWindow = OperatingSystem.IsMacOS()
-                ? new MainWindow { DataContext = new MainWindowViewModel() }
-                : new MainWindowWin { DataContext = new MainWindowViewModel() };
+            desktop.MainWindow = new MainWindow
+            {
+                DataContext = new MainWindowViewModel()
+            };
 
         base.OnFrameworkInitializationCompleted();
     }
