@@ -223,9 +223,7 @@ public class Utils
         }
 
         if (!Directory.EnumerateFileSystemEntries(templatesFolder).Any())
-        {
             ZipFile.ExtractToDirectory(bracketsZip, templatesFolder);
-        }
 
         //MessageBox.Show($"Удалите существующие сетки", "Ошибка", MessageBoxButton.OK,
         //    MessageBoxImage.Error);

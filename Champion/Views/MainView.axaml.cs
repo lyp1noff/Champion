@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace Champion.Views;

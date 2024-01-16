@@ -1,12 +1,12 @@
-﻿using Avalonia;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Champion.ViewModels;
 using Champion.Views;
-using System.IO;
-using System.Linq;
-using System;
-using System.Threading.Tasks;
 
 namespace Champion;
 
@@ -40,9 +40,9 @@ public class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 
-            desktop.MainWindow = OperatingSystem.IsMacOS() ?
-                new MainWindow { DataContext = new MainWindowViewModel() } :
-                new MainWindowWin { DataContext = new MainWindowViewModel() };
+            desktop.MainWindow = OperatingSystem.IsMacOS()
+                ? new MainWindow { DataContext = new MainWindowViewModel() }
+                : new MainWindowWin { DataContext = new MainWindowViewModel() };
 
         base.OnFrameworkInitializationCompleted();
     }

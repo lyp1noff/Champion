@@ -1,12 +1,11 @@
 using Avalonia.Controls;
 
-namespace Champion.Views
+namespace Champion.Views;
+
+public partial class MainWindowWin : Window
 {
-    public partial class MainWindowWin : Window
+    public MainWindowWin()
     {
-        public MainWindowWin()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -1,7 +1,7 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
 using System.IO;
-using System.Windows.Input;
+using System.Reactive;
+using ReactiveUI;
 
 namespace Champion.ViewModels;
 
@@ -13,7 +13,8 @@ public class ExportViewModel : ViewModelBase
         {
             var categories = App.CompetitorManager.GetCategories();
 
-            if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder, App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerGroup)) { return; }
+            if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder,
+                    App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerGroup)) return;
 
             var dateTime = DateTime.Now;
             var exportFolder = Path.Combine(App.AppConfig.ExportFolder, dateTime.ToString("dd-MM-yyyy-HH-mm-ss"));
@@ -41,5 +42,6 @@ public class ExportViewModel : ViewModelBase
             }
         });
     }
-    public ICommand ExportToDocx { get; }
+
+    public ReactiveCommand<Unit, Unit> ExportToDocx { get; }
 }

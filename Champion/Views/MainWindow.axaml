@@ -12,7 +12,7 @@
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent">
     <Design.DataContext>
-        <viewModels:MainWindowViewModel/>
+        <viewModels:MainWindowViewModel />
     </Design.DataContext>
     <NativeMenu.Menu>
         <NativeMenu>
@@ -40,13 +40,13 @@
         </ExperimentalAcrylicBorder>
         <TabControl Padding="0">
             <TabItem Header="Редактор участников">
-                <views:MainView DataContext="{Binding MainView}"/>
+                <views:MainView DataContext="{Binding MainView}" />
             </TabItem>
             <TabItem Header="Редактор сеток">
                 <views:BracketEditorView />
             </TabItem>
             <TabItem Header="Экспорт">
-                <views:ExportView DataContext="{Binding ExportView}"/>
+                <views:ExportView DataContext="{Binding ExportView}" />
             </TabItem>
         </TabControl>
     </Panel>

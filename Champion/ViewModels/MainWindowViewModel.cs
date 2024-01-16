@@ -1,8 +1,3 @@
-using System;
-using System.Reactive;
-using System.Threading.Tasks;
-using ReactiveUI;
-
 namespace Champion.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase

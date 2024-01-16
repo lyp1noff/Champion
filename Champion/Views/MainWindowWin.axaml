@@ -11,10 +11,10 @@
         Title="Champion"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent">
-	<Design.DataContext>
-		<viewModels:MainWindowViewModel/>
-	</Design.DataContext>
-	<Grid RowDefinitions="Auto, *">
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto, *">
         <ExperimentalAcrylicBorder IsHitTestVisible="False">
             <ExperimentalAcrylicBorder.Material>
                 <ExperimentalAcrylicMaterial
@@ -27,16 +27,16 @@
         <DockPanel Grid.Row="0" Height="30">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open..."/>
-                    <Separator/>
-                    <MenuItem Header="_Exit"/>
+                    <MenuItem Header="_Open..." />
+                    <Separator />
+                    <MenuItem Header="_Exit" />
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="Copy"/>
-                    <MenuItem Header="Paste"/>
+                    <MenuItem Header="Copy" />
+                    <MenuItem Header="Paste" />
                 </MenuItem>
             </Menu>
-            <TextBlock/>
+            <TextBlock />
         </DockPanel>
         <Panel Grid.Row="1">
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
@@ -50,13 +50,13 @@
             </ExperimentalAcrylicBorder>
             <TabControl Padding="0">
                 <TabItem Header="Редактор участников">
-                    <views:MainView DataContext="{Binding MainView}"/>
+                    <views:MainView DataContext="{Binding MainView}" />
                 </TabItem>
                 <TabItem Header="Редактор сеток">
                     <views:BracketEditorView />
                 </TabItem>
                 <TabItem Header="Экспорт">
-                    <views:ExportView DataContext="{Binding ExportView}"/>
+                    <views:ExportView DataContext="{Binding ExportView}" />
                 </TabItem>
             </TabControl>
         </Panel>
