@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
@@ -212,11 +211,9 @@ public class Utils
 
         try
         {
-            using (var httpClient = new HttpClient())
-            {
-                await DownloadFileAsync(httpClient, categoriesUrl, categories);
-                await DownloadFileAsync(httpClient, bracketsZipUrl, bracketsZip);
-            }
+            using var httpClient = new HttpClient();
+            await DownloadFileAsync(httpClient, categoriesUrl, categories);
+            await DownloadFileAsync(httpClient, bracketsZipUrl, bracketsZip);
         }
         catch (Exception ex)
         {

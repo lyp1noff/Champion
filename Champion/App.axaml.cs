@@ -5,8 +5,8 @@ using Champion.ViewModels;
 using Champion.Views;
 using System.IO;
 using System.Linq;
-using Avalonia.Platform;
 using System;
+using System.Threading.Tasks;
 
 namespace Champion;
 
@@ -33,7 +33,7 @@ public class App : Application
         Directory.CreateDirectory(AppConfig.ExportFolder);
 
         if (!Directory.EnumerateFileSystemEntries(AppConfig.TemplatesFolder).Any())
-            Utils.DownloadDefaultBrackets(AppConfig.AppFolder, AppConfig.TemplatesFolder);
+            Task.Run(() => Utils.DownloadDefaultBrackets(AppConfig.AppFolder, AppConfig.TemplatesFolder)).Wait();
     }
 
     public override void OnFrameworkInitializationCompleted()

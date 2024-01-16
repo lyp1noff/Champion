@@ -21,6 +21,8 @@
                     <NativeMenu>
                         <NativeMenuItem Header="Open" Gesture="cmd+o" Command="{Binding OpenCommand}" />
                         <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Save" Gesture="cmd+s" Command="{Binding SaveCommand}" />
+                        <NativeMenuItem Header="Save As..." Gesture="shift+cmd+s" Command="{Binding SaveAsCommand}" />
                     </NativeMenu>
                 </NativeMenuItem.Menu>
             </NativeMenuItem>
