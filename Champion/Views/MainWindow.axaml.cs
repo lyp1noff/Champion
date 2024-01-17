@@ -31,7 +31,14 @@ public partial class MainWindow : Window
 
     private void SaveFileWinClick(object sender, RoutedEventArgs args)
     {
-        SaveFile();
+        if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath))
+        {
+            SaveFile();
+        }
+        else
+        {
+            Utils.SerializeCompetitors(App.AppConfig.SaveFilePath);
+        }
     }
 
     private void SaveAsFileWinClick(object sender, RoutedEventArgs args)
@@ -46,7 +53,14 @@ public partial class MainWindow : Window
 
     private void SaveFileClick(object sender, EventArgs e)
     {
-        SaveFile();
+        if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath))
+        {
+            SaveFile();
+        }
+        else
+        {
+            Utils.SerializeCompetitors(App.AppConfig.SaveFilePath);
+        }
     }
 
     private void SaveAsFileClick(object sender, EventArgs e)

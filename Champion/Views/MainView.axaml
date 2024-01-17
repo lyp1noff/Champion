@@ -52,8 +52,8 @@
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Edit" />
-                        <MenuItem Header="Remove" Command="{Binding RemoveCompetitor}" />
+                        <MenuItem Header="Изменить" />
+                        <MenuItem Header="Удалить" Command="{Binding RemoveCompetitor}" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>

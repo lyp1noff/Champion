@@ -16,13 +16,13 @@
     </Design.DataContext>
     <NativeMenu.Menu>
         <NativeMenu>
-            <NativeMenuItem Header="File">
+            <NativeMenuItem Header="Файл">
                 <NativeMenuItem.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="Open" Gesture="cmd+o" Click="OpenFileClick" />
+                        <NativeMenuItem Header="Открыть..." Gesture="cmd+o" Click="OpenFileClick" />
                         <NativeMenuItemSeparator />
-                        <NativeMenuItem Header="Save" Gesture="cmd+s" Click="SaveFileClick" />
-                        <NativeMenuItem Header="Save As..." Gesture="shift+cmd+s" Click="SaveAsFileClick" />
+                        <NativeMenuItem Header="Сохранить" Gesture="cmd+s" Click="SaveFileClick" />
+                        <NativeMenuItem Header="Сохранить как..." Gesture="shift+cmd+s" Click="SaveAsFileClick" />
                     </NativeMenu>
                 </NativeMenuItem.Menu>
             </NativeMenuItem>
@@ -45,11 +45,11 @@
             <OnPlatform.Windows>
                 <DockPanel Grid.Row="0" Height="30">
                     <Menu DockPanel.Dock="Top">
-                        <MenuItem Header="_File">
-                            <MenuItem Header="_Open..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
+                        <MenuItem Header="_Файл">
+                            <MenuItem Header="_Открыть..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
                             <Separator />
-                            <MenuItem Header="_Save" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
-                            <MenuItem Header="_Save As..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s"
+                            <MenuItem Header="_Сохранить" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
+                            <MenuItem Header="_Сохранить как..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s"
                                       Click="SaveAsFileWinClick" />
                         </MenuItem>
                     </Menu>
