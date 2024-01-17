@@ -11,72 +11,73 @@
         Title="Champion"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent">
-	<Design.DataContext>
-		<viewModels:MainWindowViewModel />
-	</Design.DataContext>
-	<NativeMenu.Menu>
-		<NativeMenu>
-			<NativeMenuItem Header="File">
-				<NativeMenuItem.Menu>
-					<NativeMenu>
-						<NativeMenuItem Header="Open" Gesture="cmd+o" Click="OpenFileClick" />
-						<NativeMenuItemSeparator />
-						<NativeMenuItem Header="Save" Gesture="cmd+s" Click="SaveFileClick" />
-						<NativeMenuItem Header="Save As..." Gesture="shift+cmd+s" Click="SaveAsFileClick" />
-					</NativeMenu>
-				</NativeMenuItem.Menu>
-			</NativeMenuItem>
-		</NativeMenu>
-	</NativeMenu.Menu>
-	<Grid RowDefinitions="Auto, *">
-		<ExperimentalAcrylicBorder IsHitTestVisible="False">
-			<ExperimentalAcrylicBorder.Material>
-				<ExperimentalAcrylicMaterial
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Design.DataContext>
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="File">
+                <NativeMenuItem.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Open" Gesture="cmd+o" Click="OpenFileClick" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Save" Gesture="cmd+s" Click="SaveFileClick" />
+                        <NativeMenuItem Header="Save As..." Gesture="shift+cmd+s" Click="SaveAsFileClick" />
+                    </NativeMenu>
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
+    <Grid RowDefinitions="Auto, *">
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
                     BackgroundSource="Digger"
                     TintColor="Black"
                     TintOpacity="1"
                     MaterialOpacity="0.65" />
-			</ExperimentalAcrylicBorder.Material>
-		</ExperimentalAcrylicBorder>
-		<OnPlatform>
-			<OnPlatform.Default>
-				<Grid/>
-			</OnPlatform.Default>
-			<OnPlatform.Windows>
-				<DockPanel Grid.Row="0" Height="30">
-					<Menu DockPanel.Dock="Top">
-						<MenuItem Header="_File">
-							<MenuItem Header="_Open..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
-							<Separator />
-							<MenuItem Header="_Save" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
-							<MenuItem Header="_Save As..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s" Click="SaveAsFileWinClick" />
-						</MenuItem>
-					</Menu>
-					<TextBlock />
-				</DockPanel>
-			</OnPlatform.Windows>
-		</OnPlatform>
-		<Panel Grid.Row="1">
-			<ExperimentalAcrylicBorder IsHitTestVisible="False">
-				<ExperimentalAcrylicBorder.Material>
-					<ExperimentalAcrylicMaterial
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <OnPlatform>
+            <OnPlatform.Default>
+                <Grid />
+            </OnPlatform.Default>
+            <OnPlatform.Windows>
+                <DockPanel Grid.Row="0" Height="30">
+                    <Menu DockPanel.Dock="Top">
+                        <MenuItem Header="_File">
+                            <MenuItem Header="_Open..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
+                            <Separator />
+                            <MenuItem Header="_Save" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
+                            <MenuItem Header="_Save As..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s"
+                                      Click="SaveAsFileWinClick" />
+                        </MenuItem>
+                    </Menu>
+                    <TextBlock />
+                </DockPanel>
+            </OnPlatform.Windows>
+        </OnPlatform>
+        <Panel Grid.Row="1">
+            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial
                         BackgroundSource="Digger"
                         TintColor="Black"
                         TintOpacity="1"
                         MaterialOpacity="0.65" />
-				</ExperimentalAcrylicBorder.Material>
-			</ExperimentalAcrylicBorder>
-			<TabControl Padding="0">
-				<TabItem Header="Редактор участников">
-					<views:MainView DataContext="{Binding MainView}" />
-				</TabItem>
-				<TabItem Header="Редактор сеток">
-					<views:BracketEditorView />
-				</TabItem>
-				<TabItem Header="Экспорт">
-					<views:ExportView DataContext="{Binding ExportView}" />
-				</TabItem>
-			</TabControl>
-		</Panel>
-	</Grid>
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+            <TabControl Padding="0">
+                <TabItem Header="Редактор участников">
+                    <views:MainView DataContext="{Binding MainView}" />
+                </TabItem>
+                <TabItem Header="Редактор сеток">
+                    <views:BracketEditorView />
+                </TabItem>
+                <TabItem Header="Экспорт">
+                    <views:ExportView DataContext="{Binding ExportView}" />
+                </TabItem>
+            </TabControl>
+        </Panel>
+    </Grid>
 </Window>

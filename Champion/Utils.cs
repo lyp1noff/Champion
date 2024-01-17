@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Champion.Views;
 using Xceed.Words.NET;
 
 namespace Champion;
@@ -200,7 +199,7 @@ public class Utils
         }
     }
 
-    public static async void DownloadDefaultBrackets(string appFolder, string templatesFolder)
+    public static async Task DownloadDefaultBrackets(string appFolder, string templatesFolder)
     {
         var bracketsZipUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/templates.zip";
         var bracketsZipName = Path.GetFileName(bracketsZipUrl);

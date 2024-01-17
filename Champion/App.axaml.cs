@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -21,17 +20,9 @@ public class App : Application
 
         AppConfig.Initialize();
 
-        CompetitorManager.AddCompetitor(new Competitor("Andrew", "Paziuka", "Zalan", "CADET OPEN"));
-        CompetitorManager.AddCompetitor(new Competitor("Ivan", "Paziuka", "Zalan", "CADET OPEN"));
-        CompetitorManager.AddCompetitor(new Competitor("Ярик", "Кипелов", "Боев", "KUMITE 12 YEARS OPEN"));
-        CompetitorManager.AddCompetitor(new Competitor("Вася", "Морозов", "Боев", "KUMITE 12 YEARS OPEN"));
-
         Directory.CreateDirectory(AppConfig.AppFolder);
         Directory.CreateDirectory(AppConfig.TemplatesFolder);
         Directory.CreateDirectory(AppConfig.ExportFolder);
-
-        if (!Directory.EnumerateFileSystemEntries(AppConfig.TemplatesFolder).Any())
-            Task.Run(() => Utils.DownloadDefaultBrackets(AppConfig.AppFolder, AppConfig.TemplatesFolder)).Wait();
 
         if (Path.Exists(AppConfig.ConfigFilePath))
         {
@@ -51,11 +42,17 @@ public class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-
+        {
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                Utils.DeserializeCompetitors(args[1]);
+            }
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainWindowViewModel()
             };
+        }
 
         base.OnFrameworkInitializationCompleted();
     }

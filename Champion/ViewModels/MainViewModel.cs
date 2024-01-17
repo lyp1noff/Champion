@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Reactive;
+using System.Threading.Tasks;
 using ReactiveUI;
 
 namespace Champion.ViewModels;
@@ -19,7 +20,9 @@ public class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         _competitorManager = App.CompetitorManager;
-
+        
+        if (!Path.Exists(App.AppConfig.CategoriesFile))
+            Task.Run(() => Utils.DownloadDefaultBrackets(App.AppConfig.AppFolder, App.AppConfig.TemplatesFolder)).Wait();
         Options = new ObservableCollection<string>(File.ReadAllLines(App.AppConfig.CategoriesFile));
 
         AddCompetitor = ReactiveCommand.Create(() =>
