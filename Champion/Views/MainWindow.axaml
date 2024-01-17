@@ -19,10 +19,10 @@
 			<NativeMenuItem Header="File">
 				<NativeMenuItem.Menu>
 					<NativeMenu>
-						<NativeMenuItem Header="Open" Gesture="cmd+o" Command="{Binding OpenCommand}" />
+						<NativeMenuItem Header="Open" Gesture="cmd+o" Click="OpenFileClick" />
 						<NativeMenuItemSeparator />
-						<NativeMenuItem Header="Save" Gesture="cmd+s" Command="{Binding SaveCommand}" />
-						<NativeMenuItem Header="Save As..." Gesture="shift+cmd+s" Command="{Binding SaveAsCommand}" />
+						<NativeMenuItem Header="Save" Gesture="cmd+s" Click="SaveFileClick" />
+						<NativeMenuItem Header="Save As..." Gesture="shift+cmd+s" Click="SaveAsFileClick" />
 					</NativeMenu>
 				</NativeMenuItem.Menu>
 			</NativeMenuItem>
@@ -46,10 +46,10 @@
 				<DockPanel Grid.Row="0" Height="30">
 					<Menu DockPanel.Dock="Top">
 						<MenuItem Header="_File">
-							<MenuItem Header="_Open..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileButton_Clicked" />
+							<MenuItem Header="_Open..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
 							<Separator />
-							<MenuItem Header="_Save" InputGesture="ctrl+s" HotKey="ctrl+s" Command="{Binding SaveFile}" />
-							<MenuItem Header="_Save As..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s" Click="SaveFileButton_Clicked" />
+							<MenuItem Header="_Save" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
+							<MenuItem Header="_Save As..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s" Click="SaveAsFileWinClick" />
 						</MenuItem>
 					</Menu>
 					<TextBlock />

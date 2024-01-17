@@ -19,7 +19,8 @@ mkdir "$APP/Contents/MacOS"
 mkdir "$APP/Contents/Resources"
 
 curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/MacOS/Info.plist --output "$APP/Contents/Info.plist"
-curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/Icon.icns --output "$APP/Contents/Resources/Icon.icns"
+curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/Champion.icns --output "$APP/Contents/Resources/Champion.icns"
+curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/ChampionBracket.icns --output "$APP/Contents/Resources/ChampionBracket.icns"
 
 chmod +x "./$RUNTIME/Champion.Desktop"
 cp -a "./$RUNTIME/" "$APP/Contents/MacOS"

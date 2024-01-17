@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Champion.ViewModels;
@@ -7,11 +8,11 @@ namespace Champion.Views;
 
 public partial class MainWindow : Window
 {
-
     public MainWindow()
     {
         InitializeComponent();
     }
+
     public void RefreshDataContext()
     {
         DataContext = new MainWindowViewModel();
@@ -20,10 +21,40 @@ public partial class MainWindow : Window
     public static FilePickerFileType CBracket { get; } = new("CBracket")
     {
         Patterns = new[] { "*.cbracket" },
-        //AppleUniformTypeIdentifiers = new[] { "public.image" },
+        AppleUniformTypeIdentifiers = new[] { "cbracket" },
     };
 
-    private async void OpenFileButton_Clicked(object sender, RoutedEventArgs args)
+    private void OpenFileWinClick(object sender, RoutedEventArgs args)
+    {
+        OpenFile();
+    }
+
+    private void SaveFileWinClick(object sender, RoutedEventArgs args)
+    {
+        SaveFile();
+    }
+
+    private void SaveAsFileWinClick(object sender, RoutedEventArgs args)
+    {
+        SaveFile();
+    }
+
+    private void OpenFileClick(object sender, EventArgs e)
+    {
+        OpenFile();
+    }
+
+    private void SaveFileClick(object sender, EventArgs e)
+    {
+        SaveFile();
+    }
+
+    private void SaveAsFileClick(object sender, EventArgs e)
+    {
+        SaveFile();
+    }
+
+    private async void OpenFile()
     {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
@@ -40,7 +71,7 @@ public partial class MainWindow : Window
         RefreshDataContext();
     }
 
-    private async void SaveFileButton_Clicked(object sender, RoutedEventArgs args)
+    private async void SaveFile()
     {
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
