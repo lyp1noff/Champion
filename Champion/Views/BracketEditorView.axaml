@@ -2,11 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:Champion.ViewModels"
              x:Class="Champion.Views.BracketEditorView"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:BracketEditorViewModel">
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
+        <vm:BracketEditorViewModel />
     </Design.DataContext>
 
     <Grid>
@@ -18,8 +16,8 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ListBox Name="CategoriesListBox" ItemsSource="{Binding}" Grid.Column="0" Grid.RowSpan="2"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <ListBox Grid.Column="0" Grid.RowSpan="2" SelectionMode="Single"
+                 ItemsSource="{Binding Categories}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}">
@@ -33,7 +31,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Column="1" Grid.Row="0" Name="LimitSwitch" HorizontalAlignment="Center"
+		<StackPanel Grid.Column="1" Grid.Row="0" Name="LimitSwitch" HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <RadioButton Content="Стандартный разделитель" Name="radioButtonLimitRegular" GroupName="limitOptionsGroup"
                          Margin="0 0 0 10" />

@@ -72,7 +72,7 @@
                     <views:MainView DataContext="{Binding MainView}" />
                 </TabItem>
                 <TabItem Header="Редактор сеток">
-                    <views:BracketEditorView />
+                    <views:BracketEditorView DataContext="{Binding BracketEditor}"/>
                 </TabItem>
                 <TabItem Header="Экспорт">
                     <views:ExportView DataContext="{Binding ExportView}" />
