@@ -16,8 +16,8 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ListBox Grid.Column="0" Grid.RowSpan="2" SelectionMode="Single"
-                 ItemsSource="{Binding Categories}">
+        <ListBox Name="CategoriesListBox" Grid.Column="0" Grid.RowSpan="2" SelectionMode="Single"
+                 ItemsSource="{Binding Categories}" SelectionChanged="CategoriesListBox_OnSelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}">
