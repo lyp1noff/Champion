@@ -39,10 +39,10 @@
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
         <OnPlatform>
-            <OnPlatform.Default>
+            <On Options="Default">
                 <Grid />
-            </OnPlatform.Default>
-            <OnPlatform.Windows>
+            </On>
+            <On Options="Windows, Linux">
                 <DockPanel Grid.Row="0" Height="30">
                     <Menu DockPanel.Dock="Top">
                         <MenuItem Header="_Файл">
@@ -55,7 +55,7 @@
                     </Menu>
                     <TextBlock />
                 </DockPanel>
-            </OnPlatform.Windows>
+            </On>
         </OnPlatform>
         <Panel Grid.Row="1">
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
