@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
+using Champion.ViewModels;
 
 namespace Champion.Views;
 
@@ -12,6 +14,9 @@ public partial class BracketEditorView : UserControl
     public BracketEditorView()
     {
         InitializeComponent();
+        
+        AddHandler(DragDrop.DragOverEvent, DragOver);
+        AddHandler(DragDrop.DropEvent, Drop);
     }
     
     public void ShowBracket(IEnumerable<Competitor> bracket)
@@ -30,9 +35,8 @@ public partial class BracketEditorView : UserControl
             var textBlock = new TextBlock();
             textBlock.Text = $"{competitor.SortId}. " + competitor.GetFullName();
             textBlock.Tag = competitor;
-            // textBlock.AllowDrop = true;
-            // textBlock.Drop += TextBlock_Drop;
-            // textBlock.MouseMove += TextBlock_MouseMove;
+            textBlock.PointerPressed += OnPointerPressed;
+            textBlock.SetValue(DragDrop.AllowDropProperty, true);
 
             var contextMenu = new ContextMenu();
 
@@ -106,5 +110,59 @@ public partial class BracketEditorView : UserControl
         var data = (string)CategoriesListBox.SelectedItem!;
         if (!String.IsNullOrEmpty(data))
             ShowBracket(App.CompetitorManager.GetBracket(data));
+    }
+    
+    private async void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        Console.WriteLine("DoDrag start");
+        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
+        
+        if (sender is not TextBlock textblock) return;
+        if (textblock.DataContext is not Competitor competitor) return;
+
+        if (DataContext is not BracketEditorViewModel vm) return;
+
+        var dragData = new DataObject();
+        dragData.Set("competitor", competitor);
+        var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Move);
+        Console.WriteLine($"DragAndDrop result: {result}");
+    }
+
+    private void DragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = DragDropEffects.Move;
+        
+        var data = e.Data.Get("competitor");
+        if (data is not Competitor srcCompetitor) return;
+        
+        if (e.Source is not TextBlock textblock) return;
+        if (textblock.DataContext is not Competitor dstCompetitor) return;
+        
+        if (DataContext is not BracketEditorViewModel vm) return;
+        if (srcCompetitor.SortId == dstCompetitor.SortId) e.DragEffects = DragDropEffects.None;
+    }
+
+    private void Drop(object? sender, DragEventArgs e)
+    {
+        Console.WriteLine("Drop");
+
+        var data = e.Data.Get("competitor");
+        if (data is not Competitor srcCompetitor) return;
+        
+        if (e.Source is not TextBlock textblock) return;
+        if (textblock.DataContext is not Competitor dstCompetitor) return;
+        
+        if (DataContext is not BracketEditorViewModel vm) return;
+        
+        if (srcCompetitor.SortId == dstCompetitor.SortId) return;
+
+        (srcCompetitor.SortId, dstCompetitor.SortId) = (dstCompetitor.SortId, srcCompetitor.SortId);
+        
+        var chosenCategory = vm.Categories[0]; 
+        var chosenBracket = App.CompetitorManager.GetBracket(chosenCategory);
+        if (!string.IsNullOrEmpty(chosenCategory))
+            ShowBracket(chosenBracket);
+        else
+            BracketGrid.Children.Clear();
     }
 }
