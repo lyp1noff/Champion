@@ -1,15 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Champion.ViewModels;
 
 public class BracketEditorViewModel : ViewModelBase
 {
-    private CompetitorManager _competitorManager;
-
     public BracketEditorViewModel()
     {
-        _competitorManager = App.CompetitorManager;
+        
     }
 
-    public ObservableCollection<string> Categories => new(_competitorManager.GetCategories());
+    public List<string> Categories => App.CompetitorManager.GetCategories().OrderBy(s => s).ToList();
 }

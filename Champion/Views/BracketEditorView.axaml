@@ -20,7 +20,7 @@
                  ItemsSource="{Binding Categories}" SelectionChanged="CategoriesListBox_OnSelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}">
+                    <TextBlock Text="{Binding}" DragDrop.AllowDrop="True">
                         <TextBlock.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Изменить" />

@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Champion.ViewModels;
 
@@ -42,12 +43,12 @@ public partial class BracketEditorView : UserControl
 
             var editMenuItem = new MenuItem();
             editMenuItem.Header = "Изменить";
-            // editMenuItem.Click += OpenEditCompetitorWindow;
+            editMenuItem.Click += OpenEditCompetitorWindow;
             contextMenu.Items.Add(editMenuItem);
 
             var deleteMenuItem = new MenuItem();
             deleteMenuItem.Header = "Удалить";
-            // deleteMenuItem.Click += DeleteCompetitor;
+            deleteMenuItem.Click += DeleteCompetitor;
             contextMenu.Items.Add(deleteMenuItem);
 
             textBlock.ContextMenu = contextMenu;
@@ -57,7 +58,6 @@ public partial class BracketEditorView : UserControl
             // textBlock.VerticalAlignment = VerticalAlignment.Center;
 
             textBlock.DataContext = competitor;
-            // textBlock.PreviewMouseRightButtonDown += TextBlock_PreviewMouseRightButtonDown;
 
             if (splitList[0] == index && index > 1)
             {
@@ -107,14 +107,13 @@ public partial class BracketEditorView : UserControl
 
     private void CategoriesListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        var data = (string)CategoriesListBox.SelectedItem!;
+        var data = CategoriesListBox.SelectedItem?.ToString();
         if (!String.IsNullOrEmpty(data))
             ShowBracket(App.CompetitorManager.GetBracket(data));
     }
     
     private async void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        Console.WriteLine("DoDrag start");
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         
         if (sender is not TextBlock textblock) return;
@@ -124,8 +123,8 @@ public partial class BracketEditorView : UserControl
 
         var dragData = new DataObject();
         dragData.Set("competitor", competitor);
-        var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Move);
-        Console.WriteLine($"DragAndDrop result: {result}");
+        
+        await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Move);
     }
 
     private void DragOver(object? sender, DragEventArgs e)
@@ -144,23 +143,55 @@ public partial class BracketEditorView : UserControl
 
     private void Drop(object? sender, DragEventArgs e)
     {
-        Console.WriteLine("Drop");
-
         var data = e.Data.Get("competitor");
         if (data is not Competitor srcCompetitor) return;
         
         if (e.Source is not TextBlock textblock) return;
-        if (textblock.DataContext is not Competitor dstCompetitor) return;
-        
-        if (DataContext is not BracketEditorViewModel vm) return;
-        
-        if (srcCompetitor.SortId == dstCompetitor.SortId) return;
+        if (textblock.DataContext is not Competitor dstCompetitor)
+        {
+            if (textblock.DataContext is not string category) return;
+            if (!App.CompetitorManager.GetCategories().Contains(category)) return;
+            App.CompetitorManager.ChangeCompetitorCategory(srcCompetitor, category);
+            RefreshUi();
+        }
+        else
+        {
+            if (DataContext is not BracketEditorViewModel vm) return;
+            
+            if (srcCompetitor.SortId == dstCompetitor.SortId) return;
 
-        (srcCompetitor.SortId, dstCompetitor.SortId) = (dstCompetitor.SortId, srcCompetitor.SortId);
+            (srcCompetitor.SortId, dstCompetitor.SortId) = (dstCompetitor.SortId, srcCompetitor.SortId);
+            
+            RefreshUi();
+        }
+    }
+
+    private async void OpenEditCompetitorWindow(object? sender, RoutedEventArgs args)
+    {
+        if (args.Source is not MenuItem item) return;
+        if (item.DataContext is not Competitor dstCompetitor) return;
         
-        var chosenCategory = vm.Categories[0]; 
+        // var dialog = new EditCompetitorWindow();
+        // var result = await dialog.ShowDialog<BracketEditorViewModel?>(App.);
+        
+        RefreshUi();
+    }
+    
+    private void DeleteCompetitor(object? sender, RoutedEventArgs args)
+    {
+        if (args.Source is not MenuItem item) return;
+        if (item.DataContext is not Competitor dstCompetitor) return;
+        App.CompetitorManager.RemoveCompetitor(dstCompetitor);
+        RefreshUi();
+    }
+
+    private void RefreshUi()
+    {
+        CategoriesListBox.ItemsSource = App.CompetitorManager.GetCategories().OrderBy(s => s).ToList();
+        
+        var chosenCategory = CategoriesListBox.SelectedItem?.ToString();
         var chosenBracket = App.CompetitorManager.GetBracket(chosenCategory);
-        if (!string.IsNullOrEmpty(chosenCategory))
+        if (chosenBracket.Count > 0)
             ShowBracket(chosenBracket);
         else
             BracketGrid.Children.Clear();
