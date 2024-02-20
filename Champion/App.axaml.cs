@@ -11,6 +11,7 @@ namespace Champion;
 
 public class App : Application
 {
+    public static MainWindow MainWindow;
     public static AppConfig AppConfig = new();
     public static CompetitorManager CompetitorManager = new();
 
@@ -52,6 +53,7 @@ public class App : Application
             {
                 DataContext = new MainWindowViewModel()
             };
+            MainWindow = desktop.MainWindow as MainWindow;
         }
 
         base.OnFrameworkInitializationCompleted();

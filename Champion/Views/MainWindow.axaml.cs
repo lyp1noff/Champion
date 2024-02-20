@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -11,17 +12,56 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        Closing += MainWindow_Closing;
     }
 
     public void RefreshDataContext()
     {
         DataContext = new MainWindowViewModel();
     }
-
-    public static FilePickerFileType CBracket { get; } = new("CBracket")
+    
+    private async void MainWindow_Closing(object? sender, WindowClosingEventArgs e)
     {
-        Patterns = new[] { "*.cbracket" },
-        AppleUniformTypeIdentifiers = new[] { "cbracket" },
+        if (e.IsProgrammatic) return;
+        if (HasUnsavedChanges())
+        {
+            e.Cancel = true;
+            var dialog = new SaveFileDialog();
+            var result = await dialog.ShowDialog<int>(App.MainWindow);
+            switch (result)
+            {
+                case 1 when String.IsNullOrEmpty(App.AppConfig.SaveFilePath):
+                    await SaveFile();
+                    Close();
+                    break;
+                case 1:
+                    Utils.SerializeCompetitors(App.AppConfig.SaveFilePath);
+                    Close();
+                    break;
+                case 2:
+                    Close();
+                    break;
+                case 0:
+                    e.Cancel = false;
+                    break;
+            }
+        }
+    }
+    
+    private bool HasUnsavedChanges()
+    {
+        if (App.CompetitorManager.GetSize() == 0) return false;
+        if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath)) return true;
+        if (Utils.ComputeMd5(App.CompetitorManager) == Utils.ComputeMd5(App.AppConfig.SaveFilePath))
+            return false;
+        return true;
+    }
+
+    
+    private static FilePickerFileType ChampionBracket { get; } = new("ChampionBracket")
+    {
+        Patterns = new[] { "*.cbr" },
+        AppleUniformTypeIdentifiers = new[] { "cbr" },
     };
 
     private void OpenFileWinClick(object sender, RoutedEventArgs args)
@@ -29,11 +69,11 @@ public partial class MainWindow : Window
         OpenFile();
     }
 
-    private void SaveFileWinClick(object sender, RoutedEventArgs args)
+    private async void SaveFileWinClick(object sender, RoutedEventArgs args)
     {
         if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath))
         {
-            SaveFile();
+            await SaveFile();
         }
         else
         {
@@ -41,9 +81,9 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SaveAsFileWinClick(object sender, RoutedEventArgs args)
+    private async void SaveAsFileWinClick(object sender, RoutedEventArgs args)
     {
-        SaveFile();
+        await SaveFile();
     }
 
     private void OpenFileClick(object sender, EventArgs e)
@@ -51,11 +91,11 @@ public partial class MainWindow : Window
         OpenFile();
     }
 
-    private void SaveFileClick(object sender, EventArgs e)
+    private async void SaveFileClick(object sender, EventArgs e)
     {
         if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath))
         {
-            SaveFile();
+            await SaveFile();
         }
         else
         {
@@ -63,17 +103,17 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SaveAsFileClick(object sender, EventArgs e)
+    private async void SaveAsFileClick(object sender, EventArgs e)
     {
-        SaveFile();
+        await SaveFile();
     }
 
     private async void OpenFile()
     {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "Open CBracket File",
-            FileTypeFilter = new[] { CBracket },
+            Title = "Open Champion Bracket File",
+            FileTypeFilter = new[] { ChampionBracket },
             AllowMultiple = false
         });
 
@@ -85,12 +125,12 @@ public partial class MainWindow : Window
         RefreshDataContext();
     }
 
-    private async void SaveFile()
+    private async Task SaveFile()
     {
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            Title = "Save CBracket File",
-            FileTypeChoices = new[] { CBracket }
+            Title = "Save Champion Bracket File",
+            FileTypeChoices = new[] { ChampionBracket }
         });
 
         if (file is not null)

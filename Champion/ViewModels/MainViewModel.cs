@@ -2,13 +2,13 @@
 using System.IO;
 using System.Reactive;
 using System.Threading.Tasks;
+using Champion.Views;
 using ReactiveUI;
 
 namespace Champion.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    private CompetitorManager _competitorManager;
     private ObservableCollection<string> _options;
     private Competitor _selectedItem;
 
@@ -19,8 +19,6 @@ public class MainViewModel : ViewModelBase
     
     public MainViewModel()
     {
-        _competitorManager = App.CompetitorManager;
-        
         if (!Path.Exists(App.AppConfig.CategoriesFile))
             Task.Run(() => Utils.DownloadDefaultBrackets(App.AppConfig.AppFolder, App.AppConfig.TemplatesFolder)).Wait();
         Options = new ObservableCollection<string>(File.ReadAllLines(App.AppConfig.CategoriesFile));
@@ -35,12 +33,22 @@ public class MainViewModel : ViewModelBase
                 _categoryComboBoxSelection));
         });
 
+        EditCompetitor = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var dialog = new EditCompetitorDialog(_selectedItem);
+            var result = await dialog.ShowDialog<Competitor>(App.MainWindow);
+        });
         RemoveCompetitor = ReactiveCommand.Create(() => { App.CompetitorManager.RemoveCompetitor(_selectedItem); });
     }
-
+    
     public ReactiveCommand<Unit, Unit> AddCompetitor { get; }
+    public ReactiveCommand<Unit, Unit> EditCompetitor { get; }
     public ReactiveCommand<Unit, Unit> RemoveCompetitor { get; }
-    public ObservableCollection<Competitor> Competitors => _competitorManager.Competitors;
+    public ObservableCollection<Competitor> Competitors
+    {
+        get => App.CompetitorManager.Competitors;
+        set => this.RaiseAndSetIfChanged(ref App.CompetitorManager.Competitors, value);
+    }
 
     public Competitor SelectedItem
     {

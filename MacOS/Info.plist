@@ -29,7 +29,7 @@
 			<string>Champion Bracket</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.lyp1noff.Champion.cbracket</string>
+				<string>com.lyp1noff.Champion.cbr</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -43,7 +43,7 @@
 	<array>
 		<dict>
 			<key>UTTypeIdentifier</key>
-			<string>com.lyp1noff.Champion.cbracket</string>
+			<string>com.lyp1noff.Champion.cbr</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
@@ -55,7 +55,7 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>cbracket</string>
+				<string>cbr</string>
 			</dict>
 		</dict>
 	</array>

@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Xceed.Words.NET;
@@ -13,41 +13,38 @@ namespace Champion;
 
 public class Utils
 {
-    public static bool IsMicrosoftWordInstalled()
-    {
-        string[] wordInstallationPaths =
-        {
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-        };
+    // public static bool IsMicrosoftWordInstalled()
+    // {
+    //     string[] wordInstallationPaths =
+    //     {
+    //         Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+    //         Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+    //     };
+    //
+    //     foreach (var path in wordInstallationPaths)
+    //     {
+    //         var wordExecutablePath = Path.Combine(path, "Microsoft Office\\root\\Office16\\WINWORD.EXE");
+    //         if (File.Exists(wordExecutablePath)) return true;
+    //     }
+    //
+    //     return false;
+    // }
 
-        foreach (var path in wordInstallationPaths)
-        {
-            var wordExecutablePath = Path.Combine(path, "Microsoft Office\\root\\Office16\\WINWORD.EXE");
-            if (File.Exists(wordExecutablePath)) return true;
-        }
-
-        return false;
-    }
-
-    public static string ComputeMD5(string filePath)
+    public static string ComputeMd5(string filePath)
     {
         using var md5 = MD5.Create();
         using var stream = File.OpenRead(filePath);
         return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
     }
 
-    [Obsolete("Obsolete")]
-    public static string ComputeMD5(object obj)
+    public static string ComputeMd5(object obj)
     {
         using var md5 = MD5.Create();
-        var formatter = new BinaryFormatter();
-        using (var stream = new MemoryStream())
-        {
-            formatter.Serialize(stream, obj);
-            stream.Seek(0, SeekOrigin.Begin);
-            return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
-        }
+        using var stream = new MemoryStream();
+        DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+        serializer.WriteObject(stream, obj);
+        stream.Position = 0;
+        return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
     }
 
     public static string GetFileName(string input)
@@ -244,24 +241,23 @@ public class Utils
     //    }
     //}
 
-    [Obsolete("Obsolete")]
     public static void SerializeCompetitors(string filePath)
     {
-        var formatter = new BinaryFormatter();
-        using var fileStream = new FileStream($"{filePath}", FileMode.Create);
-        formatter.Serialize(fileStream, App.CompetitorManager);
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        {
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
+            serializer.WriteObject(stream, App.CompetitorManager);
+        }
     }
 
-    [Obsolete("Obsolete")]
     public static void DeserializeCompetitors(string filePath)
     {
-        using (var stream = new FileStream(filePath, FileMode.Open))
+        using (FileStream stream = new FileStream(filePath, FileMode.Open))
         {
-            var formatter = new BinaryFormatter();
-            App.CompetitorManager = (CompetitorManager)formatter.Deserialize(stream);
-            App.CompetitorManager.EnsureAllValidSortIds();
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
+            App.CompetitorManager = (CompetitorManager)serializer.ReadObject(stream)!;
         }
-
+        App.CompetitorManager.EnsureAllValidSortIds();
         App.AppConfig.SaveFilePath = filePath;
     }
 }

@@ -38,25 +38,27 @@
                     MaterialOpacity="0.65" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
-        <OnPlatform>
-            <On Options="Default">
-                <Grid />
-            </On>
-            <On Options="Windows, Linux">
-                <DockPanel Grid.Row="0" Height="30">
-                    <Menu DockPanel.Dock="Top">
-                        <MenuItem Header="_Файл">
-                            <MenuItem Header="_Открыть..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
-                            <Separator />
-                            <MenuItem Header="_Сохранить" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
-                            <MenuItem Header="_Сохранить как..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s"
-                                      Click="SaveAsFileWinClick" />
-                        </MenuItem>
-                    </Menu>
-                    <TextBlock />
-                </DockPanel>
-            </On>
-        </OnPlatform>
+        <Grid Grid.Row="0">
+            <OnPlatform>
+                <On Options="Default">
+                    <Grid />
+                </On>
+                <On Options="Windows, Linux">
+                    <DockPanel Height="30">
+                        <Menu DockPanel.Dock="Top">
+                            <MenuItem Header="_Файл">
+                                <MenuItem Header="_Открыть..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
+                                <Separator />
+                                <MenuItem Header="_Сохранить" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
+                                <MenuItem Header="_Сохранить как..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s"
+                                          Click="SaveAsFileWinClick" />
+                            </MenuItem>
+                        </Menu>
+                        <TextBlock />
+                    </DockPanel>
+                </On>
+            </OnPlatform>
+        </Grid>
         <Panel Grid.Row="1">
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
                 <ExperimentalAcrylicBorder.Material>

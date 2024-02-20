@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Champion;
 
-[Serializable]
+[DataContract]
 public class CompetitorManager
 {
+    [DataMember]
     public ObservableCollection<Competitor> Competitors = new();
 
     public void AddCompetitor(Competitor competitor)
@@ -160,8 +163,8 @@ public class CompetitorManager
     }
 }
 
-[Serializable]
-public class Competitor
+[DataContract]
+public class Competitor : INotifyPropertyChanged
 {
     private string _category = null!;
     private string _coach = null!;
@@ -169,6 +172,8 @@ public class Competitor
     private int _sortId = -1;
     private string _surname = null!;
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+    
     public Competitor()
     {
     }
@@ -180,31 +185,52 @@ public class Competitor
         Coach = coach;
         Category = category;
     }
-
+    
+    [DataMember]
     public string Name
     {
         get => _name;
-        set => _name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+        set
+        {
+            _name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+            OnPropertyChanged(nameof(Name));
+        }
     }
 
+    [DataMember]
     public string Surname
     {
         get => _surname;
-        set => _surname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+        set
+        {
+            _surname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+            OnPropertyChanged(nameof(Surname));
+        }
     }
 
+    [DataMember]
     public string Coach
     {
         get => _coach;
-        set => _coach = value.ToUpper().Trim();
+        set
+        {
+            _coach = value.ToUpper().Trim();
+            OnPropertyChanged(nameof(Coach));
+        }
     }
-
+    
+    [DataMember]
     public string Category
     {
         get => _category;
-        set => _category = value.Trim();
+        set
+        {
+            _category = value.Trim();
+            OnPropertyChanged(nameof(Category));
+        }
     }
 
+    [DataMember]
     public int SortId
     {
         get => _sortId;
@@ -219,5 +245,10 @@ public class Competitor
     public string GetString()
     {
         return $"{Surname} {Name} ({Coach}) - {Category}";
+    }
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

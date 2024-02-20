@@ -134,8 +134,8 @@ public partial class BracketEditorView : UserControl
         var data = e.Data.Get("competitor");
         if (data is not Competitor srcCompetitor) return;
         
-        if (e.Source is not TextBlock textblock) return;
-        if (textblock.DataContext is not Competitor dstCompetitor) return;
+        if (e.Source is not TextBlock textBlock) return;
+        if (textBlock.DataContext is not Competitor dstCompetitor) return;
         
         if (DataContext is not BracketEditorViewModel vm) return;
         if (srcCompetitor.SortId == dstCompetitor.SortId) e.DragEffects = DragDropEffects.None;
@@ -146,10 +146,10 @@ public partial class BracketEditorView : UserControl
         var data = e.Data.Get("competitor");
         if (data is not Competitor srcCompetitor) return;
         
-        if (e.Source is not TextBlock textblock) return;
-        if (textblock.DataContext is not Competitor dstCompetitor)
+        if (e.Source is not TextBlock textBlock) return;
+        if (textBlock.DataContext is not Competitor dstCompetitor)
         {
-            if (textblock.DataContext is not string category) return;
+            if (textBlock.DataContext is not string category) return;
             if (!App.CompetitorManager.GetCategories().Contains(category)) return;
             App.CompetitorManager.ChangeCompetitorCategory(srcCompetitor, category);
             RefreshUi();
@@ -171,8 +171,8 @@ public partial class BracketEditorView : UserControl
         if (args.Source is not MenuItem item) return;
         if (item.DataContext is not Competitor dstCompetitor) return;
         
-        // var dialog = new EditCompetitorWindow();
-        // var result = await dialog.ShowDialog<BracketEditorViewModel?>(App.);
+        var dialog = new EditCompetitorDialog(dstCompetitor);
+        var result = await dialog.ShowDialog<Competitor>(App.MainWindow);
         
         RefreshUi();
     }
