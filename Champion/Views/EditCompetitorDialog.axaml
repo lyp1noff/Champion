@@ -6,7 +6,8 @@
         x:Class="Champion.Views.EditCompetitorDialog"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
-        Title="Участник" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+        Title="Участник" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
+        CanResize="False">
     <Grid>
         <Panel>
             <ExperimentalAcrylicBorder IsHitTestVisible="False">

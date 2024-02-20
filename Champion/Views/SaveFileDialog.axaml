@@ -6,7 +6,8 @@
         x:Class="Champion.Views.SaveFileDialog"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
-        Title="" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+        Title="" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
+        CanResize="False">
     <Grid>
         <Panel>
             <ExperimentalAcrylicBorder IsHitTestVisible="False">
