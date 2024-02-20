@@ -9,9 +9,9 @@ ICON_FILE="./Icon.icns"
 mkdir "$TEMPDIR"
 cd "$TEMPDIR"
 
-curl "https://noboobs.life/projects/Champion/macos/$RUNTIME.zip" --output "$RUNTIME.zip"
-unzip "$RUNTIME".zip
-rm "$RUNTIME".zip
+curl "https://noboobs.help/projects/Champion/macos/$RUNTIME.tar.gz" --output "$RUNTIME.tar.gz"
+tar -xzvf "$RUNTIME".tar.gz
+rm "$RUNTIME".tar.gz
 
 mkdir "$APP"
 mkdir "$APP/Contents"
