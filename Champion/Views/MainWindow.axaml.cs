@@ -115,6 +115,7 @@ public partial class MainWindow : Window
         {
             var filePath = files[0].Path.AbsolutePath;
             App.CompetitorManager.Deserialize(filePath);
+            App.AppConfig.LastSaveFilePath = filePath;
         }
     }
 
