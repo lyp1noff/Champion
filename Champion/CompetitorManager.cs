@@ -1,28 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
 namespace Champion;
 
 [DataContract]
-public class CompetitorManager
+public class CompetitorManager : INotifyCollectionChanged
 {
+    private ObservableCollection<Competitor> _competitors = new();
+    
     [DataMember]
-    public ObservableCollection<Competitor> Competitors = new();
+    public ObservableCollection<Competitor> Competitors
+    {
+        get => _competitors;
+        set
+        {
+            if (_competitors != value)
+            {
+                _competitors = value;
+                OnCollectionChanged();
+                foreach (var competitor in _competitors)
+                {
+                    competitor.PropertyChanged += Competitor_PropertyChanged;
+                }
+            }
+        }
+    }
+
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
+    protected virtual void OnCollectionChanged()
+    {
+        CollectionChanged?.Invoke(this, null!);
+    }
+    
+    private void Competitor_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        OnCollectionChanged();
+    }
 
     public void AddCompetitor(Competitor competitor)
     {
         Competitors.Add(competitor);
         var bracket = GetBracket(competitor.Category);
         EnsureValidSortIds(bracket);
+        OnCollectionChanged();
     }
 
     public void RemoveCompetitor(Competitor competitor)
     {
         Competitors.Remove(competitor);
+        OnCollectionChanged();
     }
 
     public bool CompetitorExists(Competitor competitor)
@@ -47,9 +81,8 @@ public class CompetitorManager
     public ObservableCollection<Competitor> GetCompetitorsByCoach(string coach)
     {
         ObservableCollection<Competitor> competitorsByCoach = new();
-        for (var i = 0; i < Competitors.Count; i++)
+        foreach (var cmp in Competitors)
         {
-            var cmp = Competitors[i];
             if (cmp.Coach == coach) competitorsByCoach.Add(cmp);
         }
 
@@ -61,14 +94,13 @@ public class CompetitorManager
         ObservableCollection<Competitor> countedCompetitors = new();
         var quantities = new List<int>();
 
-        for (var i = 0; i < Competitors.Count; i++)
+        foreach (var cmp in Competitors)
         {
-            var cmp = Competitors[i];
-
+            var cmp1 = cmp;
             var objectExists = countedCompetitors.Any(obj =>
-                obj.Coach == cmp.Coach &&
-                obj.Name == cmp.Name &&
-                obj.Surname == cmp.Surname);
+                obj.Coach == cmp1.Coach &&
+                obj.Name == cmp1.Name &&
+                obj.Surname == cmp1.Surname);
             if (objectExists) continue;
 
             countedCompetitors.Add(cmp);
@@ -87,7 +119,7 @@ public class CompetitorManager
             quantities[objectExistions - 1] += 1;
         }
 
-        var competitorsQuantity = quantities.Sum(x => Convert.ToInt32(x));
+        var competitorsQuantity = quantities.Sum(Convert.ToInt32);
         quantities.Add(competitorsQuantity);
 
         return quantities;
@@ -108,6 +140,7 @@ public class CompetitorManager
         competitor.SortId = -1;
         competitor.Category = category;
         EnsureValidSortIds(GetBracket(category));
+        OnCollectionChanged();
     }
 
     public List<string> GetCategories()
@@ -126,7 +159,7 @@ public class CompetitorManager
         return GetSortedBracket();
     }
 
-    public void EnsureValidSortIds(List<Competitor> bracket)
+    private void EnsureValidSortIds(List<Competitor> bracket)
     {
         var usedSortIds = new HashSet<int>();
 
@@ -156,10 +189,25 @@ public class CompetitorManager
             }
     }
 
-
-    public void EnsureAllValidSortIds()
+    private void EnsureAllValidSortIds()
     {
         foreach (var category in GetCategories()) EnsureValidSortIds(GetBracket(category));
+    }
+    
+    public void Serialize(string filePath)
+    {
+        using FileStream stream = new FileStream(filePath, FileMode.Create);
+        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
+        serializer.WriteObject(stream, this);
+    }
+
+    public void Deserialize(string filePath)
+    {
+        using FileStream stream = new FileStream(filePath, FileMode.Open);
+        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
+        CompetitorManager newManager = (CompetitorManager)serializer.ReadObject(stream)!;
+        newManager.EnsureAllValidSortIds();
+        this.Competitors = newManager.Competitors;
     }
 }
 
@@ -169,14 +217,9 @@ public class Competitor : INotifyPropertyChanged
     private string _category = null!;
     private string _coach = null!;
     private string _name = null!;
-    private int _sortId = -1;
     private string _surname = null!;
 
     public event PropertyChangedEventHandler? PropertyChanged;
-    
-    public Competitor()
-    {
-    }
 
     public Competitor(string name, string surname, string coach, string category)
     {
@@ -185,7 +228,7 @@ public class Competitor : INotifyPropertyChanged
         Coach = coach;
         Category = category;
     }
-    
+
     [DataMember]
     public string Name
     {
@@ -218,7 +261,7 @@ public class Competitor : INotifyPropertyChanged
             OnPropertyChanged(nameof(Coach));
         }
     }
-    
+
     [DataMember]
     public string Category
     {
@@ -231,11 +274,7 @@ public class Competitor : INotifyPropertyChanged
     }
 
     [DataMember]
-    public int SortId
-    {
-        get => _sortId;
-        set => _sortId = value;
-    }
+    public int SortId { get; set; } = -1;
 
     public string GetFullName()
     {

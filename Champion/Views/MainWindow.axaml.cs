@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using Champion.ViewModels;
 
 namespace Champion.Views;
 
@@ -13,11 +12,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Closing += MainWindow_Closing;
-    }
-
-    public void RefreshDataContext()
-    {
-        DataContext = new MainWindowViewModel();
     }
     
     private async void MainWindow_Closing(object? sender, WindowClosingEventArgs e)
@@ -35,7 +29,7 @@ public partial class MainWindow : Window
                     Close();
                     break;
                 case 1:
-                    Utils.SerializeCompetitors(App.AppConfig.LastSaveFilePath);
+                    App.CompetitorManager.Serialize(App.AppConfig.LastSaveFilePath);
                     Close();
                     break;
                 case 2:
@@ -77,7 +71,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            Utils.SerializeCompetitors(App.AppConfig.LastSaveFilePath);
+            App.CompetitorManager.Serialize(App.AppConfig.LastSaveFilePath);
         }
     }
 
@@ -99,7 +93,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            Utils.SerializeCompetitors(App.AppConfig.LastSaveFilePath);
+            App.CompetitorManager.Serialize(App.AppConfig.LastSaveFilePath);
         }
     }
 
@@ -120,9 +114,8 @@ public partial class MainWindow : Window
         if (files.Count >= 1)
         {
             var filePath = files[0].Path.AbsolutePath;
-            Utils.DeserializeCompetitors(filePath);
+            App.CompetitorManager.Deserialize(filePath);
         }
-        RefreshDataContext();
     }
 
     private async Task SaveFile()
@@ -136,7 +129,7 @@ public partial class MainWindow : Window
         if (file is not null)
         {
             var filePath = file.Path.AbsolutePath;
-            Utils.SerializeCompetitors(filePath);
+            App.CompetitorManager.Serialize(filePath);
         }
     }
 }

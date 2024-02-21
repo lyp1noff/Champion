@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Reactive;
 using Champion.Views;
 using ReactiveUI;
@@ -7,8 +8,8 @@ namespace Champion.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    private Competitor _selectedItem;
-
+    private ObservableCollection<Competitor> _competitors;
+    private Competitor _selectedItem = null!;
     private string _surnameTextBox = null!;
     private string _nameTextBox = null!;
     private string _coachTextBox = null!;
@@ -16,6 +17,9 @@ public class MainViewModel : ViewModelBase
     
     public MainViewModel()
     {
+        _competitors = App.CompetitorManager.Competitors;
+        App.CompetitorManager.CollectionChanged += CompetitorManagerCategories_CollectionChanged;
+        
         AddCompetitor = ReactiveCommand.Create(() =>
         {
             if (_nameTextBox == null || _surnameTextBox == null || _coachTextBox == null ||
@@ -34,13 +38,19 @@ public class MainViewModel : ViewModelBase
         RemoveCompetitor = ReactiveCommand.Create(() => { App.CompetitorManager.RemoveCompetitor(_selectedItem); });
     }
     
+    private void CompetitorManagerCategories_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        Competitors = App.CompetitorManager.Competitors;
+    }
+    
     public ReactiveCommand<Unit, Unit> AddCompetitor { get; }
     public ReactiveCommand<Unit, Unit> EditCompetitor { get; }
     public ReactiveCommand<Unit, Unit> RemoveCompetitor { get; }
+    
     public ObservableCollection<Competitor> Competitors
     {
-        get => App.CompetitorManager.Competitors;
-        set => this.RaiseAndSetIfChanged(ref App.CompetitorManager.Competitors, value);
+        get => _competitors;
+        set => this.RaiseAndSetIfChanged(ref _competitors, value);
     }
 
     public Competitor SelectedItem

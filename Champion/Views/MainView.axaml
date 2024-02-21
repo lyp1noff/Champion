@@ -57,8 +57,8 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
-            <Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                   Content="Количество записей: 0" FontSize="10" />
+            <!-- <Label Grid.Row="1" Name="CounterLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom" -->
+            <!--        Content="Количество записей: 0" FontSize="10" /> -->
         </Grid>
     </Grid>
 </UserControl>

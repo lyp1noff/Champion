@@ -60,7 +60,7 @@ public class App : Application
         var dateTime = DateTime.Now;
         var backupSaveFilePath = Path.Combine(AppConfig.SaveFolderPath,
             dateTime.ToString("dd-MM-yyyy-HH-mm-ss") + "-backup.cbr");
-        Utils.SerializeCompetitors(backupSaveFilePath);
+        CompetitorManager.Serialize(backupSaveFilePath);
 
         DirectoryInfo directoryInfo = new DirectoryInfo(AppConfig.SaveFolderPath);
         FileInfo[] files = directoryInfo.GetFiles().OrderBy(f => f.LastWriteTime).ToArray();
@@ -80,7 +80,7 @@ public class App : Application
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
-                Utils.DeserializeCompetitors(args[1]);
+                App.CompetitorManager.Deserialize(args[1]);
             }
             desktop.MainWindow = new MainWindow
             {

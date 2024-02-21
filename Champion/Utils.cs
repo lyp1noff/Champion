@@ -55,12 +55,6 @@ public class Utils
         return fileName;
     }
 
-    public static string ReadFile(string filePath)
-    {
-        using var reader = new StreamReader(filePath);
-        return reader.ReadToEnd();
-    }
-
     public static void CreateDocxBracket(string categoryName, List<Competitor> competitors, string folder,
         string fileName)
     {
@@ -90,9 +84,8 @@ public class Utils
             idx++;
         }
 
-        for (; idx < App.AppConfig.MaxCompetitorsPerRoundGroup; idx++) document.ReplaceText($"{{{{ name_{idx} }}}}", "");
-
-
+        for (; idx < 6; idx++) document.ReplaceText($"{{{{ name_{idx} }}}}", "");
+        
         document.SaveAs($"{fileName}");
     }
 
@@ -240,24 +233,4 @@ public class Utils
     //        Save(defaultConfig, configFilePath);
     //    }
     //}
-
-    public static void SerializeCompetitors(string filePath)
-    {
-        using (FileStream stream = new FileStream(filePath, FileMode.Create))
-        {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
-            serializer.WriteObject(stream, App.CompetitorManager);
-        }
-    }
-
-    public static void DeserializeCompetitors(string filePath)
-    {
-        using (FileStream stream = new FileStream(filePath, FileMode.Open))
-        {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
-            App.CompetitorManager = (CompetitorManager)serializer.ReadObject(stream)!;
-        }
-        App.CompetitorManager.EnsureAllValidSortIds();
-        App.AppConfig.LastSaveFilePath = filePath;
-    }
 }
