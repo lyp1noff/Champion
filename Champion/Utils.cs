@@ -90,7 +90,7 @@ public class Utils
             idx++;
         }
 
-        for (; idx <= 5; idx++) document.ReplaceText($"{{{{ name_{idx} }}}}", "");
+        for (; idx < App.AppConfig.MaxCompetitorsPerRoundGroup; idx++) document.ReplaceText($"{{{{ name_{idx} }}}}", "");
 
 
         document.SaveAs($"{fileName}");
@@ -188,8 +188,8 @@ public class Utils
         {
             response.EnsureSuccessStatusCode();
 
-            using (var contentStream = await response.Content.ReadAsStreamAsync())
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            await using (var contentStream = await response.Content.ReadAsStreamAsync())
+            await using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await contentStream.CopyToAsync(fileStream);
             }
@@ -258,6 +258,6 @@ public class Utils
             App.CompetitorManager = (CompetitorManager)serializer.ReadObject(stream)!;
         }
         App.CompetitorManager.EnsureAllValidSortIds();
-        App.AppConfig.SaveFilePath = filePath;
+        App.AppConfig.LastSaveFilePath = filePath;
     }
 }

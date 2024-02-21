@@ -20,7 +20,7 @@ public partial class EditCompetitorDialog : Window
     {
         NameTextBox.Text = _competitor.Name;
         SurnameTextBox.Text = _competitor.Surname;
-        CategoryComboBox.ItemsSource = new ObservableCollection<string>(File.ReadAllLines(App.AppConfig.CategoriesFile));
+        CategoryComboBox.ItemsSource = App.AllCategories;
         CategoryComboBox.Text = _competitor.Category;
         CoachTextBox.Text = _competitor.Coach;
     }

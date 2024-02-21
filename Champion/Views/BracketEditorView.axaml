@@ -23,7 +23,7 @@
                     <TextBlock Text="{Binding}" DragDrop.AllowDrop="True">
                         <TextBlock.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Изменить" />
+                                <MenuItem Header="Изменить" Click="OpenEditCategoryWindow"/>
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>

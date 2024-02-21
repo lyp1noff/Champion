@@ -10,6 +10,8 @@ public class AppConfig
 {
     public int MaxCompetitorsPerGroup { get; set; }
     public int MaxCompetitorsPerRoundGroup { get; set; }
+    public int AutoSaveTimeInterval { get; set; }
+    public int MaxAutoSaves { get; set; }
     [JsonIgnore]
     public string AppFolder { get; private set; }
     [JsonIgnore]
@@ -21,7 +23,9 @@ public class AppConfig
     [JsonIgnore]
     public string ConfigFilePath { get; set; }
     [JsonIgnore]
-    public string SaveFilePath { get; set; }
+    public string LastSaveFilePath { get; set; }
+    [JsonIgnore]
+    public string SaveFolderPath{ get; set; }
 
     public void Initialize()
     {
@@ -35,9 +39,12 @@ public class AppConfig
 #endif
         MaxCompetitorsPerGroup = 6;
         MaxCompetitorsPerRoundGroup = 4;
+        AutoSaveTimeInterval = 3;
+        MaxAutoSaves = 50;
         AppFolder = Path.Combine(appFolderRaw, "Champion");
         TemplatesFolder = Path.Combine(AppFolder, "Templates");
         ExportFolder = Path.Combine(AppFolder, "Export");
+        SaveFolderPath = Path.Combine(AppFolder, "Saves");
         CategoriesFile = Path.Combine(AppFolder, "categories.txt");
         ConfigFilePath = Path.Combine(AppFolder, "config.json");
     }

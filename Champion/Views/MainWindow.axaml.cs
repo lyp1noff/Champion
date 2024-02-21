@@ -30,12 +30,12 @@ public partial class MainWindow : Window
             var result = await dialog.ShowDialog<int>(App.MainWindow);
             switch (result)
             {
-                case 1 when String.IsNullOrEmpty(App.AppConfig.SaveFilePath):
+                case 1 when String.IsNullOrEmpty(App.AppConfig.LastSaveFilePath):
                     await SaveFile();
                     Close();
                     break;
                 case 1:
-                    Utils.SerializeCompetitors(App.AppConfig.SaveFilePath);
+                    Utils.SerializeCompetitors(App.AppConfig.LastSaveFilePath);
                     Close();
                     break;
                 case 2:
@@ -51,8 +51,8 @@ public partial class MainWindow : Window
     private bool HasUnsavedChanges()
     {
         if (App.CompetitorManager.GetSize() == 0) return false;
-        if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath)) return true;
-        if (Utils.ComputeMd5(App.CompetitorManager) == Utils.ComputeMd5(App.AppConfig.SaveFilePath))
+        if (String.IsNullOrEmpty(App.AppConfig.LastSaveFilePath)) return true;
+        if (Utils.ComputeMd5(App.CompetitorManager) == Utils.ComputeMd5(App.AppConfig.LastSaveFilePath))
             return false;
         return true;
     }
@@ -71,13 +71,13 @@ public partial class MainWindow : Window
 
     private async void SaveFileWinClick(object sender, RoutedEventArgs args)
     {
-        if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath))
+        if (String.IsNullOrEmpty(App.AppConfig.LastSaveFilePath))
         {
             await SaveFile();
         }
         else
         {
-            Utils.SerializeCompetitors(App.AppConfig.SaveFilePath);
+            Utils.SerializeCompetitors(App.AppConfig.LastSaveFilePath);
         }
     }
 
@@ -93,13 +93,13 @@ public partial class MainWindow : Window
 
     private async void SaveFileClick(object sender, EventArgs e)
     {
-        if (String.IsNullOrEmpty(App.AppConfig.SaveFilePath))
+        if (String.IsNullOrEmpty(App.AppConfig.LastSaveFilePath))
         {
             await SaveFile();
         }
         else
         {
-            Utils.SerializeCompetitors(App.AppConfig.SaveFilePath);
+            Utils.SerializeCompetitors(App.AppConfig.LastSaveFilePath);
         }
     }
 

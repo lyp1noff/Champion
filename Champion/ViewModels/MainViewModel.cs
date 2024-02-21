@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
 using System.Reactive;
-using System.Threading.Tasks;
 using Champion.Views;
 using ReactiveUI;
 
@@ -9,7 +7,6 @@ namespace Champion.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    private ObservableCollection<string> _options;
     private Competitor _selectedItem;
 
     private string _surnameTextBox = null!;
@@ -19,10 +16,6 @@ public class MainViewModel : ViewModelBase
     
     public MainViewModel()
     {
-        if (!Path.Exists(App.AppConfig.CategoriesFile))
-            Task.Run(() => Utils.DownloadDefaultBrackets(App.AppConfig.AppFolder, App.AppConfig.TemplatesFolder)).Wait();
-        Options = new ObservableCollection<string>(File.ReadAllLines(App.AppConfig.CategoriesFile));
-
         AddCompetitor = ReactiveCommand.Create(() =>
         {
             if (_nameTextBox == null || _surnameTextBox == null || _coachTextBox == null ||
@@ -56,11 +49,7 @@ public class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _selectedItem, value);
     }
 
-    public ObservableCollection<string> Options
-    {
-        get => _options;
-        set => this.RaiseAndSetIfChanged(ref _options, value);
-    }
+    private ObservableCollection<string> Options => App.AllCategories;
 
     public string SurnameTextBox
     {

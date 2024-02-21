@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Champion.ViewModels;
 using Champion.Views;
 
@@ -14,6 +17,8 @@ public class App : Application
     public static MainWindow MainWindow;
     public static AppConfig AppConfig = new();
     public static CompetitorManager CompetitorManager = new();
+    public static ObservableCollection<string> AllCategories = new();
+    private DispatcherTimer autosaveTimer;
 
     public override void Initialize()
     {
@@ -24,6 +29,12 @@ public class App : Application
         Directory.CreateDirectory(AppConfig.AppFolder);
         Directory.CreateDirectory(AppConfig.TemplatesFolder);
         Directory.CreateDirectory(AppConfig.ExportFolder);
+        Directory.CreateDirectory(AppConfig.SaveFolderPath);
+
+        autosaveTimer = new DispatcherTimer();
+        autosaveTimer.Tick += AutoSaveTimer_Tick;
+        autosaveTimer.Interval = TimeSpan.FromMinutes(AppConfig.AutoSaveTimeInterval);
+        autosaveTimer.Start();
 
         if (Path.Exists(AppConfig.ConfigFilePath))
         {
@@ -37,6 +48,28 @@ public class App : Application
         else
         {
             AppConfig.Save();
+        }
+
+        if (!Path.Exists(AppConfig.CategoriesFile))
+            Task.Run(() => Utils.DownloadDefaultBrackets(AppConfig.AppFolder, AppConfig.TemplatesFolder)).Wait();
+        AllCategories = new ObservableCollection<string>(File.ReadAllLines(AppConfig.CategoriesFile));
+    }
+
+    private void AutoSaveTimer_Tick(object? sender, EventArgs e)
+    {
+        var dateTime = DateTime.Now;
+        var backupSaveFilePath = Path.Combine(AppConfig.SaveFolderPath,
+            dateTime.ToString("dd-MM-yyyy-HH-mm-ss") + "-backup.cbr");
+        Utils.SerializeCompetitors(backupSaveFilePath);
+
+        DirectoryInfo directoryInfo = new DirectoryInfo(AppConfig.SaveFolderPath);
+        FileInfo[] files = directoryInfo.GetFiles().OrderBy(f => f.LastWriteTime).ToArray();
+        int filesToRemoveCount = Math.Max(0, files.Length - AppConfig.MaxAutoSaves);
+        for (int i = 0; i < filesToRemoveCount; i++)
+        {
+            FileInfo fileToRemove = files[i];
+            Console.WriteLine($"Removing file: {fileToRemove.FullName}");
+            fileToRemove.Delete();
         }
     }
 

@@ -166,6 +166,25 @@ public partial class BracketEditorView : UserControl
         }
     }
 
+    private async void OpenEditCategoryWindow(object? sender, RoutedEventArgs args)
+    {
+        var chosenCategory = (string)CategoriesListBox.SelectedItem;
+        var chosenBracket = App.CompetitorManager.GetBracket(chosenCategory);
+
+
+        if (!string.IsNullOrEmpty(chosenCategory))
+        {
+            var dialog = new EditCategoryDialog(chosenBracket);
+            var result = await dialog.ShowDialog<bool>(App.MainWindow);
+            if (result)
+            {
+                // Doesn't work, need to use MVVM in future
+                CategoriesListBox.SelectedItem = chosenBracket[0].Category;
+                RefreshUi();
+            }
+        }
+    }
+
     private async void OpenEditCompetitorWindow(object? sender, RoutedEventArgs args)
     {
         if (args.Source is not MenuItem item) return;
