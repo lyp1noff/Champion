@@ -11,7 +11,7 @@ using Xceed.Words.NET;
 
 namespace Champion;
 
-public class Utils
+public abstract class Utils
 {
     // public static bool IsMicrosoftWordInstalled()
     // {
@@ -85,7 +85,7 @@ public class Utils
         }
 
         for (; idx < 6; idx++) document.ReplaceText($"{{{{ name_{idx} }}}}", "");
-        
+
         document.SaveAs($"{fileName}");
     }
 
@@ -201,36 +201,57 @@ public class Utils
 
         try
         {
-            using var httpClient = new HttpClient();
-            await DownloadFileAsync(httpClient, categoriesUrl, categories);
-            await DownloadFileAsync(httpClient, bracketsZipUrl, bracketsZip);
+            using (var httpClient = new HttpClient())
+            {
+                await DownloadFileAsync(httpClient, categoriesUrl, categories);
+                await DownloadFileAsync(httpClient, bracketsZipUrl, bracketsZip);
+            }
+
+            if (!Directory.EnumerateFileSystemEntries(templatesFolder).Any())
+                ZipFile.ExtractToDirectory(bracketsZip, templatesFolder);
+            // MessageBox.Show($"Удалите существующие сетки", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            File.Delete(bracketsZip);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
             //MessageBox.Show($"Ошибка подключения к серверу!", "Ошибка", MessageBoxButton.OK,
             //    MessageBoxImage.Error);
-            return;
+            if (!File.Exists(categories))
+            {
+                File.Create(categories).Close();
+            }
         }
-
-        if (!Directory.EnumerateFileSystemEntries(templatesFolder).Any())
-            ZipFile.ExtractToDirectory(bracketsZip, templatesFolder);
-
-        //MessageBox.Show($"Удалите существующие сетки", "Ошибка", MessageBoxButton.OK,
-        //    MessageBoxImage.Error);
-        File.Delete(bracketsZip);
     }
 
-    //public static void InitializeDefaultConfig(string configFilePath)
-    //{
-    //    if (!File.Exists(configFilePath))
-    //    {
-    //        AppConfig defaultConfig = new AppConfig
-    //        {
-    //            MaxCompetitorsPerGroup = 6,
-    //            MaxCompetitorsPerRoundGroup = 4
-    //        };
+    public static async Task ConvertToPdf(string folderPath, string fileName)
+    {
+        var url = "http://noboobs.help:3300/forms/libreoffice/convert";
 
-    //        Save(defaultConfig, configFilePath);
-    //    }
-    //}
+        using var formData = new MultipartFormDataContent();
+        formData.Add(new StringContent("true"), "merge");
+
+        string[] files = Directory.GetFiles(folderPath);
+        foreach (string filePath in files)
+        {
+            await using var fileStream = File.OpenRead(filePath);
+            var fileContent = new ByteArrayContent(await File.ReadAllBytesAsync(filePath));
+            formData.Add(fileContent, "files", Path.GetFileName(filePath));
+        }
+
+        try
+        {
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(10);
+            HttpResponseMessage response = await httpClient.PostAsync(url, formData);
+            if (response.IsSuccessStatusCode)
+            {
+                await using var fileStream = File.Create(fileName);
+                await response.Content.CopyToAsync(fileStream);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
 }

@@ -11,6 +11,7 @@ namespace Champion.ViewModels;
 
 public class ExportViewModel : ViewModelBase
 {
+    private bool _checkBoxStatus;
     private bool _progressBarVisibility;
     private int _progressBarMax;
     private int _progressBarValue;
@@ -19,6 +20,7 @@ public class ExportViewModel : ViewModelBase
 
     public ExportViewModel()
     {
+        _checkBoxStatus = true;
         _progressBarVisibility = false;
         _progressBarMax = 0;
         _progressBarValue = 0;
@@ -60,9 +62,14 @@ public class ExportViewModel : ViewModelBase
                         filepath += $"_{idx}";
                     await Task.Run(() =>
                         Utils.CreateDocxBracket(categoryName, bracket, App.AppConfig.TemplatesFolder, $"{filepath}"));
-                    _progressBarValue += 1;
+                    ProgressBarValue += 1;
                     idx++;
                 }
+            }
+
+            if (CheckBoxStatus)
+            {
+                await Utils.ConvertToPdf(exportFolder, Path.Combine(exportFolder, "ALL.pdf"));
             }
 
             ProgressBarVisibility = false;
@@ -113,9 +120,14 @@ public class ExportViewModel : ViewModelBase
                                 $"{filepath}"));
                     }
 
-                    _progressBarValue += 1;
+                    ProgressBarValue += 1;
                     idx++;
                 }
+            }
+
+            if (CheckBoxStatus)
+            {
+                await Utils.ConvertToPdf(exportFolder, Path.Combine(exportFolder, "ALL.pdf"));
             }
 
             ProgressBarVisibility = false;
@@ -220,6 +232,12 @@ public class ExportViewModel : ViewModelBase
     {
         get => _progressBarValue;
         set => this.RaiseAndSetIfChanged(ref _progressBarValue, value);
+    }
+
+    public bool CheckBoxStatus
+    {
+        get => _checkBoxStatus;
+        set => this.RaiseAndSetIfChanged(ref _checkBoxStatus, value);
     }
 
     public string CountTotalText

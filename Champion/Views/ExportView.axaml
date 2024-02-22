@@ -26,8 +26,8 @@
                    Content="{Binding CountTotalText}" />
 
             <Grid Grid.Row="1">
-                <!-- <CheckBox Content="Экспорт в PDF (Требуется установленный Microsoft Word)" Name="ExportToPDF" -->
-                <!--           Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True" /> -->
+                <CheckBox Content="Экспорт в PDF (Требуется подключение к Интернету)" Name="ExportToPDF"
+                          Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding CheckBoxStatus}" />
             </Grid>
 
             <Grid Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
