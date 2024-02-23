@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Champion.Views.SaveFileDialog"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        Title="" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
+        CanResize="False">
+    <Grid>
+        <Panel>
+            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial
+                        BackgroundSource="Digger"
+                        TintColor="Black"
+                        TintOpacity="1"
+                        MaterialOpacity="0.65" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+        </Panel>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="Сохранить изменения?" Margin="10" HorizontalAlignment="Center" Grid.Row="0" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Margin="10">
+                <Button Name="SaveButton" Content="Сохранить" Margin="0 0 10 0" Click="SaveButton_OnClick" />
+                <Button Name="DontSaveButton" Content="Не сохранять" Margin="0 0 10 0" Click="CloseButton_OnClick" />
+                <Button Name="CancelButton" Content="Отмена" Click="CancelButton_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

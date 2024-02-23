@@ -1,9 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Champion.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Champion.Views"
+        xmlns:viewModels="clr-namespace:Champion.ViewModels"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
         Height="600" Width="900" MinWidth="900" MinHeight="600" WindowStartupLocation="CenterScreen"
         x:Class="Champion.Views.MainWindow"
@@ -11,26 +11,75 @@
         Title="Champion"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent">
-        <Panel>
-           <ExperimentalAcrylicBorder IsHitTestVisible="False">
-               <ExperimentalAcrylicBorder.Material>
-                   <ExperimentalAcrylicMaterial
-                       BackgroundSource="Digger"
-                       TintColor="Black"
-                       TintOpacity="1"
-                       MaterialOpacity="0.65" />
-               </ExperimentalAcrylicBorder.Material>
-           </ExperimentalAcrylicBorder>
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Design.DataContext>
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="Файл">
+                <NativeMenuItem.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Открыть..." Gesture="cmd+o" Click="OpenFileClick" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Сохранить" Gesture="cmd+s" Click="SaveFileClick" />
+                        <NativeMenuItem Header="Сохранить как..." Gesture="shift+cmd+s" Click="SaveAsFileClick" />
+                    </NativeMenu>
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
+    <Grid RowDefinitions="Auto, *">
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <Grid Grid.Row="0">
+            <OnPlatform>
+                <On Options="Default">
+                    <Grid />
+                </On>
+                <On Options="Windows, Linux">
+                    <DockPanel Height="30">
+                        <Menu DockPanel.Dock="Top">
+                            <MenuItem Header="_Файл">
+                                <MenuItem Header="_Открыть..." InputGesture="ctrl+o" HotKey="ctrl+o" Click="OpenFileWinClick" />
+                                <Separator />
+                                <MenuItem Header="_Сохранить" InputGesture="ctrl+s" HotKey="ctrl+s" Click="SaveFileWinClick" />
+                                <MenuItem Header="_Сохранить как..." InputGesture="ctrl+shift+s" HotKey="ctrl+shift+s"
+                                          Click="SaveAsFileWinClick" />
+                            </MenuItem>
+                        </Menu>
+                        <TextBlock />
+                    </DockPanel>
+                </On>
+            </OnPlatform>
+        </Grid>
+        <Panel Grid.Row="1">
+            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial
+                        BackgroundSource="Digger"
+                        TintColor="Black"
+                        TintOpacity="1"
+                        MaterialOpacity="0.65" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
             <TabControl Padding="0">
                 <TabItem Header="Редактор участников">
-                    <views:MainView />
+                    <views:MainView DataContext="{Binding MainView}" />
                 </TabItem>
                 <TabItem Header="Редактор сеток">
-                    <views:BracketEditorView />
+                    <views:BracketEditorView DataContext="{Binding BracketEditor}"/>
                 </TabItem>
                 <TabItem Header="Экспорт">
-                    <views:ExportView />
+                    <views:ExportView DataContext="{Binding ExportView}" />
                 </TabItem>
             </TabControl>
-       </Panel>
+        </Panel>
+    </Grid>
 </Window>

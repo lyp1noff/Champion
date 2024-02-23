@@ -2,46 +2,79 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Champion.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Champion.Views.ExportView">
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
-    <Grid Grid.Row="0">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-      </Grid.RowDefinitions>
-      <Label Grid.Row="0" Name="CountTotalLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Content=""></Label>
-      <Grid Grid.Row="1">
-        <CheckBox Content="Экспорт в PDF (Требуется установленный Microsoft Word)" Name="ExportToPDF" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
-      </Grid>
-      <Grid Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+    <Design.DataContext>
+        <viewModels:ExportViewModel />
+    </Design.DataContext>
 
+    <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition></RowDefinition>
-          <RowDefinition></RowDefinition>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Grid.Column="0" Content="Открыть папку с шаблонами" Margin="10" />
-        <Button Grid.Row="0" Grid.Column="1" Content="Открыть папку экспорта" Margin="10" />
-        <Button Grid.Row="0" Grid.Column="2" Content="Экспорт" Margin="10" />
-        <Button Grid.Row="0" Grid.Column="3" Content="Круговой экспорт" Margin="10" />
-        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Экспорт участников по категориям" Margin="10" />
-        <Button Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Content="Экспорт участников по тренеру" Margin="10" />
-      </Grid>
-      <ProgressBar Grid.Row="3" Name="ProgressBar" Width="400" Height="10" Margin="20" />
+            <Label Grid.Row="0" Name="CountTotalLabel" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Content="{Binding CountTotalText}" />
+
+            <Grid Grid.Row="1">
+                <CheckBox Content="Экспорт в PDF (Требуется подключение к Интернету)" Name="ExportToPDF"
+                          Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding CheckBoxStatus}" />
+            </Grid>
+
+            <Grid Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Открыть папку программы" Width="240"
+                            Command="{Binding OpenAppFolder}"
+                            HorizontalContentAlignment="Center" Margin="10" />
+                    <Button Content="Открыть папку экспорта" Width="200"
+                            Command="{Binding OpenExportFolder}"
+                            HorizontalContentAlignment="Center" Margin="10" />
+                    <Button Content="Скачать шаблоны и категории" Width="240"
+                            Command="{Binding }"
+                            HorizontalContentAlignment="Center" Margin="10" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Экспорт участников по категориям" Width="350"
+                            Command="{Binding ExportByCategory}"
+                            HorizontalContentAlignment="Center" Margin="10" />
+                    <Button Content="Экспорт участников по тренеру" Width="350"
+                            Command="{Binding ExportByCoach}"
+                            HorizontalContentAlignment="Center" Margin="10" />
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Круговой экспорт" Width="350"
+                            Command="{Binding ExportToDocxRound}"
+                            HorizontalContentAlignment="Center" Margin="10" />
+                    <Button Content="Экспорт"
+                            Command="{Binding ExportToDocx}" Width="350"
+                            HorizontalContentAlignment="Center" Margin="10" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="3" Height="10" Margin="20">
+                <ProgressBar Name="ExportProgressBar" Width="400" Minimum="0"
+                             IsVisible="{Binding ProgressBarVisibility}"
+                             Maximum="{Binding ProgressBarMax}"
+                             Value="{Binding ProgressBarValue}" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" VerticalAlignment="Bottom" Margin="10">
+            <Label HorizontalAlignment="Right" Content="Made by lyp1noff" FontSize="12" />
+            <Label Name="VersionLabel" Content="{Binding VersionText}" FontSize="12" />
+        </Grid>
     </Grid>
-    <Label Grid.Row="1" Content="Made by lyp1noff" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"></Label>
-  </Grid>
 </UserControl>

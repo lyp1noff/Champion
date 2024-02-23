@@ -1,12 +1,17 @@
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
-namespace Champion.Views
+namespace Champion.Views;
+
+public partial class ExportView : UserControl
 {
-    public partial class ExportView : UserControl
+    public ExportView()
     {
-        public ExportView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

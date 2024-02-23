@@ -1,47 +1,45 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:Champion.ViewModels"
-        x:Class="Champion.Views.BracketEditorView"
-        x:DataType="vm:MainViewModel">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:Champion.ViewModels"
+             x:Class="Champion.Views.BracketEditorView"
+             x:DataType="vm:BracketEditorViewModel">
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
+        <vm:BracketEditorViewModel />
     </Design.DataContext>
 
     <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="350" />
-      <ColumnDefinition Width="*" />
-    </Grid.ColumnDefinitions>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="100" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
-    <ListBox Name="CategoriesListBox" ItemsSource="{Binding}" Grid.Column="0" Grid.RowSpan="2"
-             ScrollViewer.VerticalScrollBarVisibility="Auto">
-      <ListBox.ItemTemplate>
-        <DataTemplate>
-          <TextBlock Text="{Binding}">
-            <TextBlock.ContextMenu>
-              <ContextMenu>
-                <MenuItem Header="Изменить"/>
-              </ContextMenu>
-            </TextBlock.ContextMenu>
-          </TextBlock>
-        </DataTemplate>
-      </ListBox.ItemTemplate>
-    </ListBox>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ListBox Name="CategoriesListBox" Grid.Column="0" Grid.RowSpan="2" SelectionMode="Single"
+                 ItemsSource="{Binding Categories}" SelectionChanged="CategoriesListBox_OnSelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" DragDrop.AllowDrop="True">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Изменить" Click="OpenEditCategoryWindow"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-    <StackPanel Grid.Column="1" Grid.Row="0" Name="LimitSwitch" HorizontalAlignment="Center" VerticalAlignment="Center">
-      <RadioButton Content="Стандартный разделитель" Name="radioButtonLimitRegular" GroupName="limitOptionsGroup" Margin="0 0 0 10"/>
-      <RadioButton Content="Круговой разделитель" Name="radioButtonLimitRound" GroupName="limitOptionsGroup" />
-    </StackPanel>
-    <ScrollViewer Margin="0 0 0 10"  Grid.Column="1" Grid.Row="1"
-                  VerticalAlignment="Center" VerticalScrollBarVisibility="Auto">
-      <Grid Name="BracketGrid" VerticalAlignment="Center" />
-    </ScrollViewer>
-  </Grid>
+		<StackPanel Grid.Column="1" Grid.Row="0" Name="LimitSwitch" HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <RadioButton Content="Стандартный разделитель" Name="radioButtonLimitRegular" GroupName="limitOptionsGroup"
+                         Margin="0 0 0 10" />
+            <RadioButton Content="Круговой разделитель" Name="radioButtonLimitRound" GroupName="limitOptionsGroup" />
+        </StackPanel>
+        <ScrollViewer Margin="0 0 0 10" Grid.Column="1" Grid.Row="1"
+                      VerticalAlignment="Center" VerticalScrollBarVisibility="Auto">
+            <Grid Name="BracketGrid" VerticalAlignment="Center" />
+        </ScrollViewer>
+    </Grid>
 </UserControl>

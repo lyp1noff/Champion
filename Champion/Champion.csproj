@@ -1,31 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
 
-  
-  <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        
+        <DefineConstants Condition="'$(OS)' == 'Windows'">WINDOWS</DefineConstants>
+        <DefineConstants Condition="'$(OS)' == 'Unix'">MACOS</DefineConstants>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
-    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Views\BracketEditorView.axaml.cs">
-      <DependentUpon>BracketEditorView.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.9" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.9" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.9" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.9" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.9" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.9" />
+        <PackageReference Include="DocX" Version="3.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Views\BracketEditorView.axaml.cs">
+            <DependentUpon>BracketEditorView.axaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Assets\" />
+    </ItemGroup>
 </Project>
