@@ -4,6 +4,8 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
 
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        
         <DefineConstants Condition="'$(OS)' == 'Windows'">WINDOWS</DefineConstants>
         <DefineConstants Condition="'$(OS)' == 'Unix'">MACOS</DefineConstants>
     </PropertyGroup>

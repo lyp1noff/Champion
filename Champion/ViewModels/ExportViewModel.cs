@@ -73,6 +73,7 @@ public class ExportViewModel : ViewModelBase
             }
 
             ProgressBarVisibility = false;
+            Utils.RunProcess(exportFolder);
         });
 
         ExportToDocxRound = ReactiveCommand.CreateFromTask(async () =>
@@ -131,6 +132,7 @@ public class ExportViewModel : ViewModelBase
             }
 
             ProgressBarVisibility = false;
+            Utils.RunProcess(exportFolder);
         });
 
         ExportByCategory = ReactiveCommand.Create(() =>
@@ -147,13 +149,7 @@ public class ExportViewModel : ViewModelBase
             var filepath = Path.Combine(App.AppConfig.ExportFolder, "category.txt");
             File.WriteAllText(filepath, result);
             
-            new Process
-            {
-                StartInfo = new ProcessStartInfo(filepath)
-                {
-                    UseShellExecute = true
-                }
-            }.Start();
+            Utils.RunProcess(filepath);
         });
         
         ExportByCoach = ReactiveCommand.Create(() =>
@@ -172,35 +168,17 @@ public class ExportViewModel : ViewModelBase
             var filepath = Path.Combine(App.AppConfig.ExportFolder, "coach.txt");
             File.WriteAllText(filepath, result);
             
-            new Process
-            {
-                StartInfo = new ProcessStartInfo(filepath)
-                {
-                    UseShellExecute = true
-                }
-            }.Start();
+            Utils.RunProcess(filepath);
         });
 
         OpenExportFolder = ReactiveCommand.Create(() =>
         {
-            new Process
-            {
-                StartInfo = new ProcessStartInfo(App.AppConfig.ExportFolder)
-                {
-                    UseShellExecute = true
-                }
-            }.Start();
+            Utils.RunProcess(App.AppConfig.ExportFolder);
         });
         
         OpenAppFolder = ReactiveCommand.Create(() =>
         {
-            new Process
-            {
-                StartInfo = new ProcessStartInfo(App.AppConfig.AppFolder)
-                {
-                    UseShellExecute = true
-                }
-            }.Start();
+            Utils.RunProcess(App.AppConfig.AppFolder);
         });
     }
     

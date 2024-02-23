@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -253,5 +254,16 @@ public abstract class Utils
         {
             Console.WriteLine(e);
         }
+    }
+
+    public static void RunProcess(string arg)
+    {
+        new Process
+        {
+            StartInfo = new ProcessStartInfo(arg)
+            {
+                UseShellExecute = true
+            }
+        }.Start();
     }
 }
