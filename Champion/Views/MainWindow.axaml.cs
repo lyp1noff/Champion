@@ -113,7 +113,7 @@ public partial class MainWindow : Window
 
         if (files.Count >= 1)
         {
-            var filePath = files[0].Path.AbsolutePath;
+            var filePath = files[0].Path.LocalPath;
             App.CompetitorManager.Deserialize(filePath);
             App.AppConfig.LastSaveFilePath = filePath;
         }
@@ -129,7 +129,7 @@ public partial class MainWindow : Window
 
         if (file is not null)
         {
-            var filePath = file.Path.AbsolutePath;
+            var filePath = file.Path.LocalPath;
             App.CompetitorManager.Serialize(filePath);
         }
     }
