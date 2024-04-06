@@ -232,17 +232,18 @@ public abstract class Utils
         formData.Add(new StringContent("true"), "merge");
 
         string[] files = Directory.GetFiles(folderPath);
-        foreach (string filePath in files)
+        for (var i = 0; i < files.Length; i++)
         {
+            var filePath = files[i];
             await using var fileStream = File.OpenRead(filePath);
             var fileContent = new ByteArrayContent(await File.ReadAllBytesAsync(filePath));
-            formData.Add(fileContent, "files", Path.GetFileName(filePath));
+            formData.Add(fileContent, "files", $"{i}.docx");
         }
 
         try
         {
             using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(10);
+            httpClient.Timeout = TimeSpan.FromSeconds(300);
             HttpResponseMessage response = await httpClient.PostAsync(url, formData);
             if (response.IsSuccessStatusCode)
             {
