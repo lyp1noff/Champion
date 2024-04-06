@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -50,8 +51,13 @@ public class App : Application
             AppConfig.Save();
         }
 
+        
+        if (!Directory.EnumerateFileSystemEntries(AppConfig.TemplatesFolder).Any())
+            Task.Run(Utils.DownloadDefaultBrackets).Wait();
+
         if (!Path.Exists(AppConfig.CategoriesFile))
-            Task.Run(() => Utils.DownloadDefaultBrackets(AppConfig.AppFolder, AppConfig.TemplatesFolder)).Wait();
+            Task.Run(Utils.DownloadDefaultCategoriesList).Wait();
+
         AllCategories = new ObservableCollection<string>(File.ReadAllLines(AppConfig.CategoriesFile));
     }
 
@@ -80,7 +86,9 @@ public class App : Application
             var args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
-                App.CompetitorManager.Deserialize(args[1]);
+                var filePath = args[1];
+                CompetitorManager.Deserialize(filePath);
+                AppConfig.LastSaveFilePath = filePath;
             }
             desktop.MainWindow = new MainWindow
             {

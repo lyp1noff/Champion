@@ -190,33 +190,39 @@ public abstract class Utils
         }
     }
 
-    public static async Task DownloadDefaultBrackets(string appFolder, string templatesFolder)
+    public static async Task DownloadDefaultBrackets()
     {
         var bracketsZipUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/templates.zip";
         var bracketsZipName = Path.GetFileName(bracketsZipUrl);
-        var bracketsZip = Path.Combine(appFolder, bracketsZipName);
-
-        var categoriesUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/categories.txt";
-        var categoriesName = Path.GetFileName(categoriesUrl);
-        var categories = Path.Combine(appFolder, categoriesName);
+        var bracketsZip = Path.Combine(App.AppConfig.AppFolder, bracketsZipName);
 
         try
         {
-            using (var httpClient = new HttpClient())
-            {
-                await DownloadFileAsync(httpClient, categoriesUrl, categories);
-                await DownloadFileAsync(httpClient, bracketsZipUrl, bracketsZip);
-            }
-
-            if (!Directory.EnumerateFileSystemEntries(templatesFolder).Any())
-                ZipFile.ExtractToDirectory(bracketsZip, templatesFolder);
-            // MessageBox.Show($"Удалите существующие сетки", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            var httpClient = new HttpClient();
+            await DownloadFileAsync(httpClient, bracketsZipUrl, bracketsZip);
+            
+            ZipFile.ExtractToDirectory(bracketsZip, App.AppConfig.TemplatesFolder);
             File.Delete(bracketsZip);
         }
         catch (Exception e)
         {
-            //MessageBox.Show($"Ошибка подключения к серверу!", "Ошибка", MessageBoxButton.OK,
-            //    MessageBoxImage.Error);
+            // ignored
+        }
+    }
+
+    public static async Task DownloadDefaultCategoriesList()
+    {
+        var categoriesUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/categories.txt";
+        var categoriesName = Path.GetFileName(categoriesUrl);
+        var categories = Path.Combine(App.AppConfig.AppFolder, categoriesName);
+
+        try
+        {
+            using var httpClient = new HttpClient();
+            await DownloadFileAsync(httpClient, categoriesUrl, categories);
+        }
+        catch (Exception e)
+        {
             if (!File.Exists(categories))
             {
                 File.Create(categories).Close();
