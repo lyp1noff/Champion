@@ -13,7 +13,7 @@ namespace Champion;
 [DataContract]
 public class CompetitorManager : INotifyCollectionChanged
 {
-    private ObservableCollection<Competitor> _competitors = new();
+    private ObservableCollection<Competitor> _competitors = [];
     
     [DataMember]
     public ObservableCollection<Competitor> Competitors
@@ -21,14 +21,12 @@ public class CompetitorManager : INotifyCollectionChanged
         get => _competitors;
         set
         {
-            if (_competitors != value)
+            if (_competitors == value) return;
+            _competitors = value;
+            OnCollectionChanged();
+            foreach (var competitor in _competitors)
             {
-                _competitors = value;
-                OnCollectionChanged();
-                foreach (var competitor in _competitors)
-                {
-                    competitor.PropertyChanged += Competitor_PropertyChanged;
-                }
+                competitor.PropertyChanged += Competitor_PropertyChanged;
             }
         }
     }
@@ -59,15 +57,15 @@ public class CompetitorManager : INotifyCollectionChanged
         OnCollectionChanged();
     }
 
-    public bool CompetitorExists(Competitor competitor)
-    {
-        var objectExists = Competitors.Any(obj =>
-            obj.Category == competitor.Category &&
-            obj.Coach == competitor.Coach &&
-            obj.Name == competitor.Name &&
-            obj.Surname == competitor.Surname);
-        return objectExists;
-    }
+    //public bool CompetitorExists(Competitor competitor)
+    //{
+    //    var objectExists = Competitors.Any(obj =>
+    //        obj.Category == competitor.Category &&
+    //        obj.Coach == competitor.Coach &&
+    //        obj.Name == competitor.Name &&
+    //        obj.Surname == competitor.Surname);
+    //    return objectExists;
+    //}
 
     public List<string> GetCoachList()
     {
@@ -80,7 +78,7 @@ public class CompetitorManager : INotifyCollectionChanged
 
     public ObservableCollection<Competitor> GetCompetitorsByCoach(string coach)
     {
-        ObservableCollection<Competitor> competitorsByCoach = new();
+        ObservableCollection<Competitor> competitorsByCoach = [];
         foreach (var cmp in Competitors)
         {
             if (cmp.Coach == coach) competitorsByCoach.Add(cmp);
@@ -91,7 +89,7 @@ public class CompetitorManager : INotifyCollectionChanged
 
     public List<int> CountCompetitorsInMultipleCategory()
     {
-        ObservableCollection<Competitor> countedCompetitors = new();
+        ObservableCollection<Competitor> countedCompetitors = [];
         var quantities = new List<int>();
 
         foreach (var cmp in Competitors)
@@ -196,18 +194,18 @@ public class CompetitorManager : INotifyCollectionChanged
     
     public void Serialize(string filePath)
     {
-        using FileStream stream = new FileStream(filePath, FileMode.Create);
-        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
+        using var stream = new FileStream(filePath, FileMode.Create);
+        var serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
         serializer.WriteObject(stream, this);
     }
 
     public void Deserialize(string filePath)
     {
-        using FileStream stream = new FileStream(filePath, FileMode.Open);
-        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
-        CompetitorManager newManager = (CompetitorManager)serializer.ReadObject(stream)!;
+        using var stream = new FileStream(filePath, FileMode.Open);
+        var serializer = new DataContractJsonSerializer(typeof(CompetitorManager));
+        var newManager = (CompetitorManager)serializer.ReadObject(stream)!;
         newManager.EnsureAllValidSortIds();
-        this.Competitors = newManager.Competitors;
+        Competitors = newManager.Competitors;
     }
 }
 
@@ -216,12 +214,12 @@ public class Competitor : INotifyPropertyChanged
 {
     private string _category = null!;
     private string _coach = null!;
-    private string _name = null!;
-    private string _surname = null!;
+    private string? _name;
+    private string? _surname;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public Competitor(string name, string surname, string coach, string category)
+    public Competitor(string? name, string? surname, string coach, string category)
     {
         Name = name;
         Surname = surname;
@@ -230,23 +228,25 @@ public class Competitor : INotifyPropertyChanged
     }
 
     [DataMember]
-    public string Name
+    public string? Name
     {
         get => _name;
         set
         {
-            _name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+            if (!string.IsNullOrEmpty(value))
+                _name = (value[..1].ToUpper() + value[1..].ToLower()).Trim();
             OnPropertyChanged(nameof(Name));
         }
     }
 
     [DataMember]
-    public string Surname
+    public string? Surname
     {
         get => _surname;
         set
         {
-            _surname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+            if (!string.IsNullOrEmpty(value))
+                _surname = (value[..1].ToUpper() + value[1..].ToLower()).Trim();
             OnPropertyChanged(nameof(Surname));
         }
     }

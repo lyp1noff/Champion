@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;
 using Champion.Views;
@@ -10,10 +11,10 @@ public class MainViewModel : ViewModelBase
 {
     private ObservableCollection<Competitor> _competitors;
     private Competitor _selectedItem = null!;
-    private string _surnameTextBox = null!;
-    private string _nameTextBox = null!;
-    private string _coachTextBox = null!;
-    private string _categoryComboBoxSelection = null!;
+    private string? _surnameTextBox;
+    private string? _nameTextBox;
+    private string? _coachTextBox;
+    private string? _categoryComboBoxSelection;
     
     public MainViewModel()
     {
@@ -22,8 +23,7 @@ public class MainViewModel : ViewModelBase
         
         AddCompetitor = ReactiveCommand.Create(() =>
         {
-            if (_nameTextBox == null || _surnameTextBox == null || _coachTextBox == null ||
-                _categoryComboBoxSelection == null)
+            if (string.IsNullOrEmpty(_coachTextBox) || string.IsNullOrEmpty(_categoryComboBoxSelection))
                 return;
 
             App.CompetitorManager.AddCompetitor(new Competitor(_nameTextBox, _surnameTextBox, _coachTextBox,
@@ -67,7 +67,7 @@ public class MainViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _surnameTextBox, value);
     }
 
-    public string NameTextBox
+    public string? NameTextBox
     {
         get => _nameTextBox;
         set => this.RaiseAndSetIfChanged(ref _nameTextBox, value);
