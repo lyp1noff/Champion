@@ -13,7 +13,7 @@ namespace Champion;
 [DataContract]
 public class CompetitorManager : INotifyCollectionChanged
 {
-    private ObservableCollection<Competitor> _competitors = [];
+    private ObservableCollection<Competitor> _competitors = new();
     
     [DataMember]
     public ObservableCollection<Competitor> Competitors
@@ -78,7 +78,7 @@ public class CompetitorManager : INotifyCollectionChanged
 
     public ObservableCollection<Competitor> GetCompetitorsByCoach(string coach)
     {
-        ObservableCollection<Competitor> competitorsByCoach = [];
+        ObservableCollection<Competitor> competitorsByCoach = new();
         foreach (var cmp in Competitors)
         {
             if (cmp.Coach == coach) competitorsByCoach.Add(cmp);
@@ -89,7 +89,7 @@ public class CompetitorManager : INotifyCollectionChanged
 
     public List<int> CountCompetitorsInMultipleCategory()
     {
-        ObservableCollection<Competitor> countedCompetitors = [];
+        ObservableCollection<Competitor> countedCompetitors = new();
         var quantities = new List<int>();
 
         foreach (var cmp in Competitors)
