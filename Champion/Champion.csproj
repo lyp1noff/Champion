@@ -4,6 +4,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
 
+		<AssemblyName>championcore</AssemblyName>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         
         <DefineConstants Condition="'$(OS)' == 'Windows'">WINDOWS</DefineConstants>
@@ -16,24 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.9" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.9" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.9" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.9" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.9" />
+        <PackageReference Include="Avalonia" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.9" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
         <PackageReference Include="DocX" Version="3.0.0" />
-        <PackageReference Include="System.Drawing.Common" Version="8.0.2" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Compile Update="Views\BracketEditorView.axaml.cs">
-            <DependentUpon>BracketEditorView.axaml</DependentUpon>
-        </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Assets\" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.3" />
     </ItemGroup>
 </Project>

@@ -24,7 +24,7 @@ curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/MacOS/Info.pli
 curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/Champion.icns --output "$APP/Contents/Resources/Champion.icns"
 curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/ChampionBracket.icns --output "$APP/Contents/Resources/ChampionBracket.icns"
 
-chmod +x "./$RUNTIME/Champion.Desktop"
+chmod +x "./$RUNTIME/Champion"
 cp -a "./$RUNTIME/" "$APP/Contents/MacOS"
 
 xattr -cr $APP

@@ -28,5 +28,5 @@ cp "$INFO_PLIST" "$APP_NAME/Contents/Info.plist"
 cp "../Assets/Champion.icns" "$APP_NAME/Contents/Resources/Champion.icns"
 cp "../Assets/ChampionBracket.icns" "$APP_NAME/Contents/Resources/ChampionBracket.icns"
 
-chmod +x "$PUBLISH_OUTPUT_DIRECTORY/Champion.Desktop"
+chmod +x "$PUBLISH_OUTPUT_DIRECTORY/Champion"
 cp -a "$PUBLISH_OUTPUT_DIRECTORY" "$APP_NAME/Contents/MacOS"
