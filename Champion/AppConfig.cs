@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Runtime.InteropServices;
 
 namespace Champion;
 
@@ -30,13 +31,14 @@ public class AppConfig
     public void Initialize()
     {
         string appFolderRaw;
-#if WINDOWS
-            appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-#elif MACOS
-        appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Documents");
-#else
         appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-#endif
+// #if WINDOWS
+//         appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+// #elif MACOS
+//         appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Documents");
+// #else
+//         appFolderRaw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+// #endif
         MaxCompetitorsPerGroup = 6;
         MaxCompetitorsPerRoundGroup = 4;
         AutoSaveTimeInterval = 3;
