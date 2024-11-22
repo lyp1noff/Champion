@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reflection;
 using System.Threading.Tasks;
+using Champion.Views;
 using ReactiveUI;
 
 namespace Champion.ViewModels;
@@ -135,6 +137,119 @@ public class ExportViewModel : ViewModelBase
             Utils.RunProcess(exportFolder);
         });
 
+        ExportSelective = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var dialog = new ExportSelectionDialog();
+            var result = await dialog.ShowDialog<int>(App.MainWindow);
+            List<string> categories = dialog.SelectedCategories;
+
+            if (categories.Count < 1 || result == 0) return;
+
+            if (result == 1)
+            {
+                if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder,
+                        App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerGroup)) return;
+
+                var dateTime = DateTime.Now;
+                var exportFolder = Path.Combine(App.AppConfig.ExportFolder, dateTime.ToString("dd-MM-yyyy-HH-mm-ss"));
+                Directory.CreateDirectory(exportFolder);
+
+                ProgressBarVisibility = true;
+                ProgressBarMax = categories.Count;
+                ProgressBarValue = 0;
+
+                foreach (var categoryName in categories)
+                {
+                    var numberOfCompetitors = App.CompetitorManager.GetBracket(categoryName).Count;
+                    var categorySizes =
+                        Utils.SplitCompetitors(numberOfCompetitors, App.AppConfig.MaxCompetitorsPerGroup);
+
+                    var idx = 1;
+                    var pointer = 0;
+                    foreach (var categorySize in categorySizes)
+                    {
+                        var category = App.CompetitorManager.GetBracket(categoryName);
+                        var filename = Utils.GetFileName(categoryName);
+                        var filepath = Path.Combine(exportFolder, filename);
+                        var bracket = category.GetRange(pointer, categorySize);
+                        pointer += categorySize;
+                        if (categorySizes.Count > 1)
+                            filepath += $"_{idx}";
+                        await Task.Run(() =>
+                            Utils.CreateDocxBracket(categoryName, bracket, App.AppConfig.TemplatesFolder,
+                                $"{filepath}"));
+                        ProgressBarValue += 1;
+                        idx++;
+                    }
+                }
+
+                if (CheckBoxStatus)
+                {
+                    await Utils.ConvertToPdf(exportFolder, Path.Combine(exportFolder, "ALL.pdf"));
+                }
+
+                ProgressBarVisibility = false;
+                Utils.RunProcess(exportFolder);
+            }
+
+            if (result == 2)
+            {
+                if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder,
+                        App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerRoundGroup)) return;
+
+                var dateTime = DateTime.Now;
+                var exportFolder = Path.Combine(App.AppConfig.ExportFolder, dateTime.ToString("dd-MM-yyyy-HH-mm-ss"));
+                Directory.CreateDirectory(exportFolder);
+
+                ProgressBarVisibility = true;
+                ProgressBarMax = categories.Count;
+                ProgressBarValue = 0;
+
+                foreach (var categoryName in categories)
+                {
+                    var numberOfCompetitors = App.CompetitorManager.GetBracket(categoryName).Count;
+                    var categorySizes =
+                        Utils.SplitCompetitors(numberOfCompetitors, App.AppConfig.MaxCompetitorsPerRoundGroup);
+
+                    var idx = 1;
+                    var pointer = 0;
+                    foreach (var categorySize in categorySizes)
+                    {
+                        var category = App.CompetitorManager.GetBracket(categoryName);
+                        var filename = Utils.GetFileName(categoryName);
+                        var filepath = Path.Combine(exportFolder, filename);
+                        var bracket = category.GetRange(pointer, categorySize);
+                        pointer += categorySize;
+                        var bracketSize = bracket.Count;
+                        if (categorySizes.Count > 1) filepath += $"_{idx}";
+                        if (bracketSize == 2)
+                        {
+                            await Task.Run(() =>
+                                Utils.CreateDocxBracket(categoryName, bracket, App.AppConfig.TemplatesFolder,
+                                    $"{filepath}"));
+                        }
+                        else
+                        {
+                            await Task.Run(() =>
+                                Utils.CreateDocxRoundBracket(categoryName, bracket, App.AppConfig.TemplatesFolder,
+                                    $"{filepath}"));
+                        }
+
+                        ProgressBarValue += 1;
+                        idx++;
+                    }
+                }
+
+                if (CheckBoxStatus)
+                {
+                    await Utils.ConvertToPdf(exportFolder, Path.Combine(exportFolder, "ALL.pdf"));
+                }
+
+                ProgressBarVisibility = false;
+                Utils.RunProcess(exportFolder);
+            }
+        });
+
         ExportByCategory = ReactiveCommand.Create(() =>
         {
             var result = "";
@@ -145,13 +260,13 @@ public class ExportViewModel : ViewModelBase
                 foreach (var cmp in competitorsByCategory) result += cmp.GetFullName() + "\n";
                 result += "\n";
             }
-            
+
             var filepath = Path.Combine(App.AppConfig.ExportFolder, "category.txt");
             File.WriteAllText(filepath, result);
-            
+
             Utils.RunProcess(filepath);
         });
-        
+
         ExportByCoach = ReactiveCommand.Create(() =>
         {
             if (App.CompetitorManager.Competitors.Count == 0) return;
@@ -164,24 +279,18 @@ public class ExportViewModel : ViewModelBase
                 foreach (var cmp in competitorsByCoach) result += cmp.GetString() + "\n";
                 result += "\n";
             }
-	
+
             var filepath = Path.Combine(App.AppConfig.ExportFolder, "coach.txt");
             File.WriteAllText(filepath, result);
-            
+
             Utils.RunProcess(filepath);
         });
 
-        OpenExportFolder = ReactiveCommand.Create(() =>
-        {
-            Utils.RunProcess(App.AppConfig.ExportFolder);
-        });
-        
-        OpenAppFolder = ReactiveCommand.Create(() =>
-        {
-            Utils.RunProcess(App.AppConfig.AppFolder);
-        });
+        OpenExportFolder = ReactiveCommand.Create(() => { Utils.RunProcess(App.AppConfig.ExportFolder); });
+
+        OpenAppFolder = ReactiveCommand.Create(() => { Utils.RunProcess(App.AppConfig.AppFolder); });
     }
-    
+
     private void CompetitorManagerCategories_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         SetCounterLabels();
@@ -189,6 +298,7 @@ public class ExportViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> ExportToDocx { get; }
     public ReactiveCommand<Unit, Unit> ExportToDocxRound { get; }
+    public ReactiveCommand<Unit, Unit> ExportSelective { get; }
     public ReactiveCommand<Unit, Unit> ExportByCategory { get; }
     public ReactiveCommand<Unit, Unit> ExportByCoach { get; }
     public ReactiveCommand<Unit, Unit> OpenExportFolder { get; }
@@ -229,13 +339,13 @@ public class ExportViewModel : ViewModelBase
         get => _versionText;
         set => this.RaiseAndSetIfChanged(ref _countTotalText, value);
     }
-    
+
     private void SetCounterLabels()
     {
         var applicationsQuantity = App.CompetitorManager.GetSize();
         var competitorsInMultipleCategory = App.CompetitorManager.CountCompetitorsInMultipleCategory();
         var output = "";
-	
+
         var i = 0;
         for (; i < competitorsInMultipleCategory.Count - 1; i++)
         {
@@ -244,15 +354,14 @@ public class ExportViewModel : ViewModelBase
                 output += $"Уч. с {i + 1} категорией: {competitorsInMultipleCategory[i]}\n";
                 continue;
             }
-	
+
             output += $"Уч. с {i + 1} категориями: {competitorsInMultipleCategory[i]}\n";
         }
-	
+
         output += $"Участников: {competitorsInMultipleCategory[i]}\n";
         output += $"Заявок: {applicationsQuantity}";
-	
+
         // CounterLabel.Content = output.Replace("\n", "\t");
         CountTotalText = output;
     }
-
 }

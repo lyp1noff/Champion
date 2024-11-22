@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="500" Height="700"
+        xmlns:vm="clr-namespace:Champion.ViewModels"
+        x:Class="Champion.Views.ExportSelectionDialog"
+        x:DataType="vm:ExportSelectionViewModel"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        Title=""
+        WindowStartupLocation="CenterScreen">
+    <Design.DataContext>
+        <vm:ExportSelectionViewModel />
+    </Design.DataContext>
+    <Grid>
+        <Panel>
+            <ExperimentalAcrylicBorder IsHitTestVisible="False">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial
+                        BackgroundSource="Digger"
+                        TintColor="Black"
+                        TintOpacity="1"
+                        MaterialOpacity="0.65" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+        </Panel>
+        <Grid Margin="10" RowDefinitions="*,Auto">
+            <ListBox Grid.Row="0" ItemsSource="{Binding Categories}" Margin="10 10 10 0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <CheckBox IsChecked="{Binding IsChecked}" />
+                            <TextBlock Text="{Binding Name}" Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Name="ExportButton" Content="Экспорт" Margin="0 0 10 0" Click="ExportButton_OnClick" />
+                <Button Name="RoundExportButton" Content="Круговой Экспорт" Margin="0 0 10 0" Click="RoundExportButton_OnClick" />
+                <Button Name="CancelButton" Content="Отмена" Click="CancelButton_OnClick" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
