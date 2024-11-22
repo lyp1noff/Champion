@@ -5,7 +5,7 @@
         <LangVersion>latest</LangVersion>
 
 		<AssemblyName>championcore</AssemblyName>
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyVersion>1.0.1.0</AssemblyVersion>
         
         <DefineConstants Condition="'$(OS)' == 'Windows'">WINDOWS</DefineConstants>
         <DefineConstants Condition="'$(OS)' == 'Unix'">MACOS</DefineConstants>
