@@ -104,6 +104,11 @@ public partial class BracketEditorView : UserControl
             index++;
         }
     }
+    
+    private void RadioButtonLimitRound_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        RefreshUi();
+    }
 
     private void CategoriesListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {

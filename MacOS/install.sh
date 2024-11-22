@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# curl -s https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/MacOS/install.sh | bash -s arm64/x64
+# curl -s https://raw.githubusercontent.com/lyp1noff/Champion/refs/heads/main/MacOS/install.sh | bash -s arm64/x64
 
 TEMPDIR="$TMPDIR/champion"
 APP="./Champion.app"
@@ -11,7 +11,7 @@ ICON_FILE="./Icon.icns"
 mkdir "$TEMPDIR"
 cd "$TEMPDIR"
 
-curl "https://noboobs.help/projects/Champion/macos/$RUNTIME.tar.gz" --output "$RUNTIME.tar.gz"
+curl "https://noboobs.online/projects/Champion/macos/$RUNTIME.tar.gz" --output "$RUNTIME.tar.gz"
 tar -xzvf "$RUNTIME".tar.gz
 rm "$RUNTIME".tar.gz
 
@@ -20,9 +20,9 @@ mkdir "$APP/Contents"
 mkdir "$APP/Contents/MacOS"
 mkdir "$APP/Contents/Resources"
 
-curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/MacOS/Info.plist --output "$APP/Contents/Info.plist"
-curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/Champion.icns --output "$APP/Contents/Resources/Champion.icns"
-curl https://git.noboobs.help/lyp1noff/Champion/raw/branch/master/Assets/ChampionBracket.icns --output "$APP/Contents/Resources/ChampionBracket.icns"
+curl https://raw.githubusercontent.com/lyp1noff/Champion/refs/heads/main/MacOS/Info.plist --output "$APP/Contents/Info.plist"
+curl https://raw.githubusercontent.com/lyp1noff/Champion/refs/heads/main/Assets/Champion.icns --output "$APP/Contents/Resources/Champion.icns"
+curl https://raw.githubusercontent.com/lyp1noff/Champion/refs/heads/main/Assets/ChampionBracket.icns --output "$APP/Contents/Resources/ChampionBracket.icns"
 
 chmod +x "./$RUNTIME/Champion"
 cp -a "./$RUNTIME/" "$APP/Contents/MacOS"

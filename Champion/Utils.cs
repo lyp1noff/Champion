@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -192,7 +193,7 @@ public abstract class Utils
 
     public static async Task DownloadDefaultBrackets()
     {
-        var bracketsZipUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/templates.zip";
+        var bracketsZipUrl = "https://noboobs.online/projects/ChampionBracketMaker/assets/templates.zip";
         var bracketsZipName = Path.GetFileName(bracketsZipUrl);
         var bracketsZip = Path.Combine(App.AppConfig.AppFolder, bracketsZipName);
 
@@ -212,7 +213,7 @@ public abstract class Utils
 
     public static async Task DownloadDefaultCategoriesList()
     {
-        var categoriesUrl = "https://noboobs.help/projects/ChampionBracketMaker/assets/categories.txt";
+        var categoriesUrl = "https://noboobs.online/projects/ChampionBracketMaker/assets/categories.txt";
         var categoriesName = Path.GetFileName(categoriesUrl);
         var categories = Path.Combine(App.AppConfig.AppFolder, categoriesName);
 
@@ -232,7 +233,7 @@ public abstract class Utils
 
     public static async Task ConvertToPdf(string folderPath, string fileName)
     {
-        var url = "http://noboobs.help:3300/forms/libreoffice/convert";
+        var url = "https://noboobs.online/gotenberg/forms/libreoffice/convert";
 
         using var formData = new MultipartFormDataContent();
         formData.Add(new StringContent("true"), "merge");
@@ -249,12 +250,18 @@ public abstract class Utils
         try
         {
             using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = 
+                new AuthenticationHeaderValue("Bearer", "your-secure-token");
             httpClient.Timeout = TimeSpan.FromSeconds(300);
             HttpResponseMessage response = await httpClient.PostAsync(url, formData);
             if (response.IsSuccessStatusCode)
             {
                 await using var fileStream = File.Create(fileName);
                 await response.Content.CopyToAsync(fileStream);
+            }
+            else
+            {
+                Console.WriteLine(response.StatusCode);
             }
         }
         catch (Exception e)
