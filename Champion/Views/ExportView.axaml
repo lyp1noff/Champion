@@ -58,10 +58,10 @@
                 </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Content="Круговой экспорт" Width="230"
-                            Command="{Binding ExportToDocxRound}"
+                            Command="{Binding ExportToDocxRoundButton}"
                             HorizontalContentAlignment="Center" Margin="10" />
                     <Button Content="Экспорт"
-                            Command="{Binding ExportToDocx}" Width="220"
+                            Command="{Binding ExportToDocxButton}" Width="220"
                             HorizontalContentAlignment="Center" Margin="10" />
                     <Button Content="Экспорт Selective"
                             Command="{Binding ExportSelective}" Width="230"

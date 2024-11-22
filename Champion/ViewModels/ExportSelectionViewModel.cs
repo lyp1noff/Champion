@@ -13,21 +13,30 @@ public class ExportSelectionViewModel : ViewModelBase
         Categories = new ObservableCollection<CategoryItem>(
             App.CompetitorManager.GetCategories()
                 .OrderBy(s => s)
-                .Select(name => new CategoryItem { Name = name, IsChecked = false })
+                .Select(name => new CategoryItem { Name = name, IsChecked = true })
         );
     }
-    
+
     public List<string> GetSelectedCategories()
     {
         return Categories
-            .Where(c => c.IsChecked)
+            .Where(c => c.IsChecked == true)
+            .Select(c => c.Name)
+            .ToList();
+    }
+
+    public List<string> GetIndeterminateCategories()
+    {
+        return Categories
+            .Where(c => c.IsChecked == null)
             .Select(c => c.Name)
             .ToList();
     }
 }
 
+
 public class CategoryItem
 {
     public string Name { get; set; }
-    public bool IsChecked { get; set; }
+    public bool? IsChecked { get; set; }
 }

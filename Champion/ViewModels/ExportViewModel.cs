@@ -31,10 +31,20 @@ public class ExportViewModel : ViewModelBase
 
         App.CompetitorManager.CollectionChanged += CompetitorManagerCategories_CollectionChanged;
 
-        ExportToDocx = ReactiveCommand.CreateFromTask(async () =>
+        ExportToDocxButton = ReactiveCommand.CreateFromTask(async () =>
         {
             var categories = App.CompetitorManager.GetCategories();
+            ExportToDocx(categories);
+        });
 
+        ExportToDocxRoundButton = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var categories = App.CompetitorManager.GetCategories();
+            ExportToDocxRound(categories);
+        });
+
+        async void ExportToDocx(List<string> categories, int skip=0)
+        {
             if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder,
                     App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerGroup)) return;
 
@@ -68,6 +78,9 @@ public class ExportViewModel : ViewModelBase
                     idx++;
                 }
             }
+            
+            
+            if (skip > 0) return;
 
             if (CheckBoxStatus)
             {
@@ -76,12 +89,10 @@ public class ExportViewModel : ViewModelBase
 
             ProgressBarVisibility = false;
             Utils.RunProcess(exportFolder);
-        });
+        }
 
-        ExportToDocxRound = ReactiveCommand.CreateFromTask(async () =>
+        async void ExportToDocxRound(List<string> categories)
         {
-            var categories = App.CompetitorManager.GetCategories();
-
             if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder,
                     App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerRoundGroup)) return;
 
@@ -135,119 +146,19 @@ public class ExportViewModel : ViewModelBase
 
             ProgressBarVisibility = false;
             Utils.RunProcess(exportFolder);
-        });
+        }
 
         ExportSelective = ReactiveCommand.CreateFromTask(async () =>
         {
             var dialog = new ExportSelectionDialog();
-            var result = await dialog.ShowDialog<int>(App.MainWindow);
-            List<string> categories = dialog.SelectedCategories;
-
-            if (categories.Count < 1 || result == 0) return;
-
-            if (result == 1)
+            dialog.OnExport += (regularCategories,roundCategories ) =>
             {
-                if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder,
-                        App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerGroup)) return;
-
-                var dateTime = DateTime.Now;
-                var exportFolder = Path.Combine(App.AppConfig.ExportFolder, dateTime.ToString("dd-MM-yyyy-HH-mm-ss"));
-                Directory.CreateDirectory(exportFolder);
-
-                ProgressBarVisibility = true;
-                ProgressBarMax = categories.Count;
-                ProgressBarValue = 0;
-
-                foreach (var categoryName in categories)
-                {
-                    var numberOfCompetitors = App.CompetitorManager.GetBracket(categoryName).Count;
-                    var categorySizes =
-                        Utils.SplitCompetitors(numberOfCompetitors, App.AppConfig.MaxCompetitorsPerGroup);
-
-                    var idx = 1;
-                    var pointer = 0;
-                    foreach (var categorySize in categorySizes)
-                    {
-                        var category = App.CompetitorManager.GetBracket(categoryName);
-                        var filename = Utils.GetFileName(categoryName);
-                        var filepath = Path.Combine(exportFolder, filename);
-                        var bracket = category.GetRange(pointer, categorySize);
-                        pointer += categorySize;
-                        if (categorySizes.Count > 1)
-                            filepath += $"_{idx}";
-                        await Task.Run(() =>
-                            Utils.CreateDocxBracket(categoryName, bracket, App.AppConfig.TemplatesFolder,
-                                $"{filepath}"));
-                        ProgressBarValue += 1;
-                        idx++;
-                    }
-                }
-
-                if (CheckBoxStatus)
-                {
-                    await Utils.ConvertToPdf(exportFolder, Path.Combine(exportFolder, "ALL.pdf"));
-                }
-
-                ProgressBarVisibility = false;
-                Utils.RunProcess(exportFolder);
-            }
-
-            if (result == 2)
-            {
-                if (Utils.ExportValidationCheck(App.CompetitorManager, App.AppConfig.TemplatesFolder,
-                        App.AppConfig.ExportFolder, App.AppConfig.MaxCompetitorsPerRoundGroup)) return;
-
-                var dateTime = DateTime.Now;
-                var exportFolder = Path.Combine(App.AppConfig.ExportFolder, dateTime.ToString("dd-MM-yyyy-HH-mm-ss"));
-                Directory.CreateDirectory(exportFolder);
-
-                ProgressBarVisibility = true;
-                ProgressBarMax = categories.Count;
-                ProgressBarValue = 0;
-
-                foreach (var categoryName in categories)
-                {
-                    var numberOfCompetitors = App.CompetitorManager.GetBracket(categoryName).Count;
-                    var categorySizes =
-                        Utils.SplitCompetitors(numberOfCompetitors, App.AppConfig.MaxCompetitorsPerRoundGroup);
-
-                    var idx = 1;
-                    var pointer = 0;
-                    foreach (var categorySize in categorySizes)
-                    {
-                        var category = App.CompetitorManager.GetBracket(categoryName);
-                        var filename = Utils.GetFileName(categoryName);
-                        var filepath = Path.Combine(exportFolder, filename);
-                        var bracket = category.GetRange(pointer, categorySize);
-                        pointer += categorySize;
-                        var bracketSize = bracket.Count;
-                        if (categorySizes.Count > 1) filepath += $"_{idx}";
-                        if (bracketSize == 2)
-                        {
-                            await Task.Run(() =>
-                                Utils.CreateDocxBracket(categoryName, bracket, App.AppConfig.TemplatesFolder,
-                                    $"{filepath}"));
-                        }
-                        else
-                        {
-                            await Task.Run(() =>
-                                Utils.CreateDocxRoundBracket(categoryName, bracket, App.AppConfig.TemplatesFolder,
-                                    $"{filepath}"));
-                        }
-
-                        ProgressBarValue += 1;
-                        idx++;
-                    }
-                }
-
-                if (CheckBoxStatus)
-                {
-                    await Utils.ConvertToPdf(exportFolder, Path.Combine(exportFolder, "ALL.pdf"));
-                }
-
-                ProgressBarVisibility = false;
-                Utils.RunProcess(exportFolder);
-            }
+                if (regularCategories.Count < 1 && roundCategories.Count < 1) return;
+                ExportToDocx(regularCategories, 1);
+                ExportToDocxRound(roundCategories);
+            };
+            
+            dialog.Show();
         });
 
         ExportByCategory = ReactiveCommand.Create(() =>
@@ -296,8 +207,8 @@ public class ExportViewModel : ViewModelBase
         SetCounterLabels();
     }
 
-    public ReactiveCommand<Unit, Unit> ExportToDocx { get; }
-    public ReactiveCommand<Unit, Unit> ExportToDocxRound { get; }
+    public ReactiveCommand<Unit, Unit> ExportToDocxButton { get; }
+    public ReactiveCommand<Unit, Unit> ExportToDocxRoundButton { get; }
     public ReactiveCommand<Unit, Unit> ExportSelective { get; }
     public ReactiveCommand<Unit, Unit> ExportByCategory { get; }
     public ReactiveCommand<Unit, Unit> ExportByCoach { get; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -7,8 +8,8 @@ namespace Champion.Views;
 
 public partial class ExportSelectionDialog : Window
 {
-    public List<string> SelectedCategories { get; private set; } = new();
-
+    public event Action<List<string>, List<string>>? OnExport;
+    
     public ExportSelectionDialog()
     {
         InitializeComponent();
@@ -17,24 +18,17 @@ public partial class ExportSelectionDialog : Window
 
     private void CancelButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        Close(0);
+        Close();
     }
 
     private void ExportButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (DataContext is ExportSelectionViewModel viewModel)
         {
-            SelectedCategories = viewModel.GetSelectedCategories();
+            var regularCategories = viewModel.GetSelectedCategories();
+            var roundCategories = viewModel.GetIndeterminateCategories();
+            OnExport?.Invoke(regularCategories, roundCategories);
         }
-        Close(1);
-    }
-    
-    private void RoundExportButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is ExportSelectionViewModel viewModel)
-        {
-            SelectedCategories = viewModel.GetSelectedCategories();
-        }
-        Close(2);
+        Close();
     }
 }

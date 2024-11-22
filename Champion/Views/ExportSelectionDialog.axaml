@@ -31,7 +31,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="2">
-                            <CheckBox IsChecked="{Binding IsChecked}" />
+                            <CheckBox IsChecked="{Binding IsChecked}" IsThreeState="True" />
                             <TextBlock Text="{Binding Name}" Margin="10,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
@@ -39,7 +39,6 @@
             </ListBox>
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
                 <Button Name="ExportButton" Content="Экспорт" Margin="0 0 10 0" Click="ExportButton_OnClick" />
-                <Button Name="RoundExportButton" Content="Круговой Экспорт" Margin="0 0 10 0" Click="RoundExportButton_OnClick" />
                 <Button Name="CancelButton" Content="Отмена" Click="CancelButton_OnClick" />
             </StackPanel>
         </Grid>
