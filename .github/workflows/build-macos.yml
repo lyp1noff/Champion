@@ -1,0 +1,41 @@
+name: Build for macOS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [osx-x64, osx-arm64]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.112
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Project
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish for macOS (${{ matrix.arch }})
+        run: dotnet publish -r ${{ matrix.arch }} -c Release --self-contained -p:UseAppHost=true
+
+      - name: Upload Build Artifact (${{ matrix.arch }})
+        uses: actions/upload-artifact@v3
+        with:
+          name: macOS-${{ matrix.arch }}-build
+          path: |
+            Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish

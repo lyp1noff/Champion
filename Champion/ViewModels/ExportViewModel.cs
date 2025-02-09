@@ -151,11 +151,11 @@ public class ExportViewModel : ViewModelBase
         ExportSelective = ReactiveCommand.CreateFromTask(async () =>
         {
             var dialog = new ExportSelectionDialog();
-            dialog.OnExport += (regularCategories,roundCategories ) =>
+            dialog.OnExport += async (regularCategories,roundCategories ) =>
             {
                 if (regularCategories.Count < 1 && roundCategories.Count < 1) return;
-                ExportToDocx(regularCategories, 1);
-                ExportToDocxRound(roundCategories);
+                await Task.Run(() => ExportToDocx(regularCategories, 1));
+                await Task.Run(() => ExportToDocxRound(roundCategories));
             };
             
             dialog.Show();
