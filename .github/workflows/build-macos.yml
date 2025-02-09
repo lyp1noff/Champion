@@ -17,10 +17,10 @@ jobs:
         arch: [osx-x64, osx-arm64]
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.112
 
@@ -34,8 +34,8 @@ jobs:
         run: dotnet publish -r ${{ matrix.arch }} -c Release --self-contained -p:UseAppHost=true
 
       - name: Upload Build Artifact (${{ matrix.arch }})
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macOS-${{ matrix.arch }}-build
-          path: |
-            Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
+          path: Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
+          compression-level: 9
