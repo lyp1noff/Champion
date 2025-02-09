@@ -39,3 +39,14 @@ jobs:
           name: macOS-${{ matrix.arch }}-build
           path: Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
           compression-level: 9
+
+      - name: Upload Build Archive to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest
+          release_name: "Latest macOS Builds"
+          draft: false
+          prerelease: false
+          files: release/macOS-${{ matrix.arch }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
