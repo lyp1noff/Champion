@@ -12,7 +12,7 @@ mkdir "$TEMPDIR"
 cd "$TEMPDIR"
 
 curl "https://noboobs.online/projects/Champion/macos/$RUNTIME.tar.gz" --output "$RUNTIME.tar.gz"
-tar -xzvf "$RUNTIME".tar.gz
+tar -xzf "$RUNTIME".tar.gz
 rm "$RUNTIME".tar.gz
 
 mkdir "$APP"
