@@ -19,26 +19,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.112
-
       - name: Restore Dependencies
         run: dotnet restore
-
-      - name: Build Project
-        run: dotnet build --configuration Release --no-restore
 
       - name: Publish for macOS (${{ matrix.arch }})
         run: dotnet publish -r ${{ matrix.arch }} -c Release --self-contained -p:UseAppHost=true
 
-      - name: Upload Build Artifact (${{ matrix.arch }})
-        uses: actions/upload-artifact@v4
-        with:
-          name: macOS-${{ matrix.arch }}-build
-          path: Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
-          compression-level: 9
+      - name: Archive Build (${{ matrix.arch }})
+        run: |
+          mkdir -p release
+          zip -r release/macOS-${{ matrix.arch }}.zip Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
+          ls -lh release
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
