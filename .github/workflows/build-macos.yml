@@ -36,7 +36,7 @@ jobs:
       - name: Archive Build (${{ matrix.arch }})
         run: |
           mkdir -p release
-          zip -r release/${{ matrix.arch }}.zip Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
+          zip -rj release/${{ matrix.arch }}.zip Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
           ls -lh release
 
       - name: Upload binaries to release
