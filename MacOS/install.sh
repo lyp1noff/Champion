@@ -11,7 +11,7 @@ ICON_FILE="./Icon.icns"
 mkdir "$TEMPDIR"
 cd "$TEMPDIR"
 
-curl "https://github.com/lyp1noff/Champion/releases/download/latest/$RUNTIME.zip" --output "$RUNTIME.zip"
+curl -L "https://github.com/lyp1noff/Champion/releases/download/latest/$RUNTIME.zip" --output "$RUNTIME.zip"
 unzip "$RUNTIME.zip" -d "$RUNTIME"
 rm "$RUNTIME".zip
 
