@@ -36,15 +36,15 @@ jobs:
       - name: Archive Build (${{ matrix.arch }})
         run: |
           mkdir -p release
-          zip -r release/macOS-${{ matrix.arch }}.zip Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
+          zip -r release/${{ matrix.arch }}.zip Champion.Desktop/bin/Release/net8.0/${{ matrix.arch }}/publish
           ls -lh release
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: release/macOS-${{ matrix.arch }}.zip
-          asset_name: macOS-${{ matrix.arch }}.zip
+          file: release/${{ matrix.arch }}.zip
+          asset_name: ${{ matrix.arch }}.zip
           tag: latest
           overwrite: true
           file_glob: true

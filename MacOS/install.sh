@@ -11,9 +11,9 @@ ICON_FILE="./Icon.icns"
 mkdir "$TEMPDIR"
 cd "$TEMPDIR"
 
-curl "https://noboobs.online/projects/Champion/macos/$RUNTIME.tar.gz" --output "$RUNTIME.tar.gz"
-tar -xzf "$RUNTIME".tar.gz
-rm "$RUNTIME".tar.gz
+curl "https://github.com/lyp1noff/Champion/releases/download/latest/$RUNTIME.zip" --output "$RUNTIME.zip"
+unzip "$RUNTIME.zip" -d "$RUNTIME"
+rm "$RUNTIME".zip
 
 mkdir "$APP"
 mkdir "$APP/Contents"
