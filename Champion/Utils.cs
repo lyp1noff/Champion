@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -233,7 +233,7 @@ public abstract class Utils
 
     public static async Task ConvertToPdf(string folderPath, string fileName)
     {
-        var url = "https://noboobs.online/gotenberg/forms/libreoffice/convert";
+        var url = "https://lyp1noff.com/gotenberg/forms/libreoffice/convert";
 
         using var formData = new MultipartFormDataContent();
         formData.Add(new StringContent("true"), "merge");

@@ -22,13 +22,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.112
-
-      - name: Restore Dependencies
-        run: dotnet restore
+      # - name: Setup .NET
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: 8.0
 
       - name: Publish for macOS (${{ matrix.arch }})
         run: dotnet publish -r ${{ matrix.arch }} -c Release --self-contained -p:UseAppHost=true
@@ -47,4 +44,3 @@ jobs:
           asset_name: ${{ matrix.arch }}.zip
           tag: latest
           overwrite: true
-          file_glob: true

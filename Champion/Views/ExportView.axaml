@@ -63,7 +63,7 @@
                     <Button Content="Экспорт"
                             Command="{Binding ExportToDocxButton}" Width="220"
                             HorizontalContentAlignment="Center" Margin="10" />
-                    <Button Content="Экспорт Selective"
+                    <Button Content="Выборочный экспорт"
                             Command="{Binding ExportSelective}" Width="230"
                             HorizontalContentAlignment="Center" Margin="10" />
                 </StackPanel>
